@@ -1,0 +1,22 @@
+header.page-header
+  .container-fluid
+    .app-content.pt-2
+      .left
+        .title 
+          h5.mb-0 {{title}}
+        .filters.mt-1.small
+          span Filter By:
+          div(class='filter-item' ng-repeat='filter in filters' ng-class='{active: filter.name === currentFilter}')
+            a(href='' ng-click='switchFilter(filter.name)')
+              i(class='fa {{filter.icon}}')
+              | {{filter.name}}
+      .right
+        .menu
+          configs
+          a(href='' ng-click='panel = !panel' ng-class='{active: panel}')
+            i.fa.fa-bars
+        form(class='form-inline query')
+          .input-group
+            input(type='text' class='form-control form-control-sm' ng-model='searchQuery' ng-keyup='searchFilter(searchQuery, $event)' ng-maxlength='15' ng-focus='wider = true' ng-blur='wider = false' ng-class='{wider: wider || panel}' placeholder='Search')
+            .input-group-addon
+              i.fa.fa-search

@@ -1,0 +1,70 @@
+// Animation
+@mixin fadeIn($speed, $delay: 0) {
+  &.ng-enter {
+    transition: all $speed linear;
+    transition-delay: $delay;
+    opacity: 0;
+  }
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+  }
+};
+
+@mixin fadeOut($speed, $delay: 0) {
+  &.ng-leave {
+    transition: all $speed linear;
+    transition-delay: $delay;
+    opacity: 1;
+  }
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+  }
+};
+
+@mixin fadeInDown($speed) {
+  &.ng-enter {
+    transition: all $speed linear;
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+};
+
+@mixin fadeOutUp($speed) {
+  &.ng-leave {
+    transition: all $speed linear;
+    transform: translateY(0);
+    opacity: 1;
+  }
+  &.ng-leave.ng-leave-active {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+};
+
+@mixin fadeInRight($speed) {
+  &.ng-hide-remove {
+    transition: all $speed ease-in;
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  &.ng-hide-remove.ng-hide-remove-active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+};
+
+@mixin fadeInLeft($speed) {
+  &.ng-hide-remove {
+    transition: all $speed ease-in;
+    transform: translateX(-60px);
+    opacity: 0;
+  }
+  &.ng-hide-remove.ng-hide-remove-active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+};

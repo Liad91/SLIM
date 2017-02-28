@@ -1,0 +1,137 @@
+.panels(ng-class='{open: panel}')
+  .panel.main.angular-animate(ng-hide='book.panel || author.panel || genre.panel || loan.panel || patron.panel')
+    .header
+      span Option Panel
+      a(href='' ng-click='panel = false')
+        i.fa.fa-times
+    .body
+      a(href='' class='tab' ng-click='open(book)') 
+        i.fa.fa-book
+        | New Book
+        i.fa.fa-caret-right
+      a(href='' class='tab' ng-click='open(author)')
+        i.fa.fa-pencil
+        | New Author
+        i.fa.fa-caret-right
+      a(href='' class='tab' ng-click='open(genre)')
+        i.fa.fa-diamond
+        | New Genre
+        i.fa.fa-caret-right
+      a(href='' class='tab' ng-click='open(loan)')
+        i.fa.fa-clock-o
+        | New Loan
+        i.fa.fa-caret-right
+      a(href='' class='tab' ng-click='open(patron)')
+        i.fa.fa-address-card-o
+        | New Patron
+        i.fa.fa-caret-right
+
+  .panel.new.angular-animate(ng-show='book.panel')
+    .header
+      span New Book
+      a(href='' ng-click='close(book)')
+        i.fa.fa-arrow-left
+    .body
+      div(name='book.form' class='row align-items-end alert-gray' ng-form novalidate)
+        div(class='form-group col-md-12' ng-class='{"has-danger": book.form.title.$invalid && (book.form.title.$dirty || book.form.$submitted) }')
+          label Title
+          input(type='text' name='title' class='form-control' ng-model='book.title' titles='titlesList' book-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": book.form.author.$invalid && (book.form.author.$dirty || book.form.$submitted)}')
+          label Author
+          select(name='author' class='form-control' ng-model='book.Author' ng-options='author.name for author in authorsList | orderBy: "name"' book-validator required)
+            option(value='') Select Author
+        div(class='form-group col-md-12' ng-class='{"has-danger": book.form.genre.$invalid && (book.form.genre.$dirty || book.form.$submitted)}')
+          label Genre
+          select(name='genre' class='form-control' ng-model='book.Genre' ng-options='genre.genre for genre in genresList | orderBy: "genre"' book-validator required)
+            option(value='') Select Genre
+        div(class='form-group col-md-12' ng-class='{"has-danger": book.form.published.$invalid && (book.form.published.$dirty || book.form.$submitted) }')
+          label First Published
+          input(type='number' name='published' class='form-control' ng-model='book.first_published' min='1800' max='{{getCurrentYear()}}' book-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": book.form.quantity.$invalid && (book.form.quantity.$dirty || book.form.$submitted) }')
+          label Quantity
+          input(type='number' name='quantity' class='form-control' ng-model='book.quantity' min='0' book-validator required)
+        div(class='text-center w-100')
+          button(class='btn btn-primary mr-2' ng-click='createBook()') Submit
+          button(class='btn btn-danger' ng-click='reset(book, "book")') Reset
+
+  .panel.new.angular-animate(ng-show='author.panel')
+    .header
+      span New Author
+      a(href='' ng-click='close(author)')
+        i.fa.fa-arrow-left
+    .body
+      div(name='author.form' class='row align-items-end alert-gray' ng-form novalidate)
+        div(class='form-group col-md-12' ng-class='{"has-danger": author.form.fname.$invalid && (author.form.fname.$dirty || author.form.$submitted) }')
+          label First Name
+          input(type='text' name='fname' class='form-control' ng-model='author.fname' author-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": author.form.lname.$invalid && (author.form.lname.$dirty || author.form.$submitted) }')
+          label Last Name
+          input(type='text' name='lname' class='form-control' ng-model='author.lname' author-validator required)
+        div(class='text-center w-100')
+          button(class='btn btn-primary mr-2' ng-click='createAuthor()') Submit
+          button(class='btn btn-danger' ng-click='reset(author, "author")') Reset
+
+  .panel.new.angular-animate(ng-show='genre.panel')
+    .header
+      span New Genre
+      a(href='' ng-click='close(genre)')
+        i.fa.fa-arrow-left
+    .body
+      din(name='genre.form' class='row align-items-end alert-gray' ng-form novalidate)
+        div(class='form-group col-md-12' ng-class='{"has-danger": genre.form.genre.$invalid && (genre.form.genre.$dirty || genre.form.$submitted) }')
+          label Genre
+          input(type='text' name='genre' class='form-control' ng-model='genre.genre' genres='genresList' genre-validator required)
+        div(class='text-center w-100')
+          button(class='btn btn-primary mr-2' ng-click='createGenre()') Submit
+          button(class='btn btn-danger' ng-click='reset(genre, "genre")') Reset
+  
+  .panel.new.angular-animate(ng-show='loan.panel')
+    .header
+      span New Loan
+      a(href='' ng-click='close(loan)')
+        i.fa.fa-arrow-left
+    .body
+      div(name='loan.form' class='row align-items-end alert-gray animated fadeIn' ng-form novalidate)
+        div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.book.$invalid && (loan.form.book.$dirty || loan.form.$submitted) }')
+          label Book
+          select(name='book' class='form-control' ng-model='loan.Book' ng-options='book.title group by getAvailableStatus(book) disable when !book.available for book in titlesList | orderBy:"title"' loan-validator required)
+            option(value='') Select book
+        div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.patron.$invalid && (loan.form.patron.$dirty || loan.form.$submitted)}')
+          label Patron
+          select(name='patron' class='form-control' ng-model='loan.Patron' ng-options='patron.full_name for patron in patronNamesList | orderBy:"full_name"' loan-validator required)
+            option(value='') Select patron
+        div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.loaned_on.$invalid}')
+          label Loaned On
+          input(type='date' name='loaned_on' class='form-control form-control-panel' ng-model='loan.loaned_on' min='2000-01-01' max='{{datePostFormat(getTomorrow())}}' loan-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.return_by.$invalid}')
+          label Return By
+          input(type='date' name='return_by' class='form-control form-control-panel' ng-model='loan.return_by' loan-validator required)
+        div(class='text-center w-100')
+          button(class='btn btn-primary mr-2' ng-click='createLoan()') Submit
+          button(class='btn btn-danger' ng-click='reset(loan, "loan")') Reset
+
+  .panel.new.angular-animate(ng-show='patron.panel')
+    .header
+      span New Patron
+      a(href='' ng-click='close(patron)')
+        i.fa.fa-arrow-left
+    .body
+      div(name='patron.form' class='row align-items-end alert-gray animated fadeIn' ng-form novalidate)
+        div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.fname.$invalid && (patron.form.fname.$dirty || patron.form.$submitted) }')
+          label First Name
+          input(type='text' name='fname' class='form-control' ng-model='patron.first_name' ng-change='patron.changed = true' patron-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.lname.$invalid && (patron.form.lname.$dirty || patron.form.$submitted)}')
+          label Last Name
+          input(type='text' name='lname' class='form-control' ng-model='patron.last_name' ng-change='patron.changed = true' patron-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.address.$invalid && (patron.form.address.$dirty || patron.form.$submitted)}')
+          label Address
+          input(type='text' name='address' class='form-control' ng-model='patron.address' ng-change='patron.changed = true' patron-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.email.$invalid && (patron.form.email.$dirty || patron.form.$submitted)}')
+          label Email
+          input(type='email' name='email' class='form-control' ng-model='patron.email' ng-change='patron.changed = true' patron-validator required)
+        div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.zip.$invalid && (patron.form.zip.$dirty || patron.form.$submitted)}')
+          label Zip Code
+          input(type='number' name='zip' class='form-control' ng-model='patron.zip_code' ng-change='patron.changed = true' min='10000' max='999999999999' ng-minlength='5' ng-maxlength='12' patron-validator required)
+        div(class='text-center w-100')
+          button(class='btn btn-primary mr-2' ng-click='createPatron()') Submit
+          button(class='btn btn-danger' ng-click='reset(patron, "patron")') Reset

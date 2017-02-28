@@ -1,0 +1,318 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('library-manager:server');
+var http = require('http');
+var models = require('../models');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+models.sequelize.sync().then(function() {
+
+  // models.User.create({
+  //   username: 'admin',
+  //   password: 'admin'
+  // });
+
+  // models.Genre.bulkCreate([
+  //   {genre: 'Fantasy'},
+  //   {genre: 'Non Fiction'},
+  //   {genre: 'Horror'},
+  //   {genre: 'Science Fiction'},
+  //   {genre: 'Classic'}
+  // ])
+  // .then(function() {
+  //   return models.Author.bulkCreate([
+  //     {name: 'Andy Weir'},
+  //     {name: 'Ernest Cline'},
+  //     {name: 'J.K. Rowling'},
+  //     {name: 'Jane Austen'},
+  //     {name: 'Mary Shelley'},
+  //     {name: 'Paula Hawkins'},
+  //     {name: 'Stephen Hawking'}
+  //   ]);
+  // })
+  // .then(function() {
+  //   return models.Book.bulkCreate([
+  //     {
+  //       title: 'The Martian',
+  //       author_id: 1,
+  //       genre_id: 4,
+  //       first_published: 2014,
+  //       quantity: 16,
+  //       available: 16
+  //     },
+  //     {
+  //       title: 'Ready Player One',
+  //       author_id: 2,
+  //       genre_id: 4,
+  //       first_published: 2011,
+  //       quantity: 6,
+  //       available: 6
+  //     },
+  //     {
+  //       title: 'Armada',
+  //       author_id: 2,
+  //       genre_id: 4,
+  //       first_published: 2015,
+  //       quantity: 3,
+  //       available: 2
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Philosopher\'s Stone',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 1997,
+  //       quantity: 15,
+  //       available: 15
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Chamber of Secrets',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 1998,
+  //       quantity: 20,
+  //       available: 19
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Prisoner of Azkaban',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 1999,
+  //       quantity: 18,
+  //       available: 18
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Goblet of Fire',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 2000,
+  //       quantity: 20,
+  //       available: 20
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Order of the Phoenix',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 2003,
+  //       quantity: 23,
+  //       available: 23
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Half-Blood Prince',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 2005,
+  //       quantity: 21,
+  //       available: 21
+  //     },
+  //     {
+  //       title: 'Harry Potter and the Deathly Hallows',
+  //       author_id: 3,
+  //       genre_id: 1,
+  //       first_published: 2007,
+  //       quantity: 25,
+  //       available: 25
+  //     },
+  //     {
+  //       title: 'Pride and Prejudice',
+  //       author_id: 4,
+  //       genre_id: 5,
+  //       first_published: 1813,
+  //       quantity: 1,
+  //       available: 0
+  //     },
+  //     {
+  //       title: 'Emma',
+  //       author_id: 4,
+  //       genre_id: 5,
+  //       first_published: 1815,
+  //       quantity: 3,
+  //       available: 3
+  //     },
+  //     {
+  //       title: 'Frankenstein',
+  //       author_id: 5,
+  //       genre_id: 3,
+  //       first_published: 1818,
+  //       quantity: 3,
+  //       available: 3
+  //     },
+  //     {
+  //       title: 'The Girl on the Train',
+  //       author_id: 6,
+  //       genre_id: 5,
+  //       first_published: 2015,
+  //       quantity: 15,
+  //       available: 14
+  //     },
+  //     {
+  //       title: 'A Brief History of Time',
+  //       author_id: 7,
+  //       genre_id: 2,
+  //       first_published: 1988,
+  //       quantity: 6,
+  //       available: 6
+  //     },
+  //     {
+  //       title: 'The Universe in a Nutshell',
+  //       author_id: 7,
+  //       genre_id: 2,
+  //       first_published: 2001,
+  //       quantity: 8,
+  //       available: 8
+  //     }
+  //   ]);
+  // })
+  // .then(function() {
+  //   return models.Patron.bulkCreate([
+  //     {
+  //       first_name: 'Andrew',
+  //       last_name: 'Chalkley',
+  //       address: '1234 NE 20st St',
+  //       email: 'andrew.chalkley@teamtreehouse.com',
+  //       zip_code: 90210
+  //     },
+  //     {
+  //       first_name: 'Dave',
+  //       last_name: 'McFarland',
+  //       address: '5252 NW 2nd St',
+  //       email: 'dave.mcfarland@teamtreehouse.com',
+  //       zip_code: 90210
+  //     },
+  //     {
+  //       first_name: 'Alena',
+  //       last_name: 'Holligan',
+  //       address: '1404 SW 101st St',
+  //       email: 'alena.holligan@teamtreehouse.com',
+  //       zip_code: 91210
+  //     },
+  //     {
+  //       first_name: 'Michael',
+  //       last_name: 'Poley',
+  //       address: '7070 NE 10th Ave',
+  //       email: 'michael.poley@teamtreehouse.com',
+  //       zip_code: 91310
+  //     }
+  //   ], {individualHooks: true});
+  // })
+  // .then(function() {
+  //   return models.Loan.bulkCreate([
+  //     {
+  //       book_id: 3,
+  //       patron_id: 2,
+  //       loaned_on: '2015-11-10',
+  //       return_by: '2016-01-10'
+  //     },
+  //     {
+  //       book_id: 5,
+  //       patron_id: 1,
+  //       loaned_on: '2017-01-01',
+  //       return_by: '2017-03-01'
+  //     },
+  //     {
+  //       book_id: 11,
+  //       patron_id: 4,
+  //       loaned_on: '2016-08-21',
+  //       return_by: '2016-11-21'
+  //     },
+  //     {
+  //       book_id: 14,
+  //       patron_id: 3,
+  //       loaned_on: '2016-12-14',
+  //       return_by: '2017-01-14'
+  //     }
+  //   ]);
+  // })
+  // .catch(function(error) {
+  //   console.log(error);
+  // });
+  
+
+
+
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+  server.listen(port, function() {
+    console.log('Server start on port ' + port);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

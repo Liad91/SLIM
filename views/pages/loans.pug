@@ -1,0 +1,67 @@
+.loader.w-100(ng-if='vm.loansList[0] === "loading"')
+  img(src='images/loader.svg')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loansList[0] === "timeout"')
+  .alert.alert-danger
+    h4.alert-heading Gateway timeout
+    p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
+    p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
+
+.app-main(ng-show='vm.loansList[0] !== "loading" && vm.loansList[0] !== "timeout"')
+  .container-fluid
+    .card
+      .head
+        h3 Current Table: {{vm.currentFilter}} Loans
+        p.small.text-info You can filter the table with the filter icons in the top menu
+
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.currentFilter === "All" && vm.loansList.length < 1')
+        .alert.alert-info
+          h4.alert-heading No Loans Found!
+          p You can add new loan by using the options panel in the top menu.
+          p.small.mb-0 However, if this message isn't eventually replaced, try to refrash the page.
+
+      .table-responsive(ng-show='vm.loansList.length > 0')
+        table(class='table striped mb-0' ng-class='{"table-hover": !vm.loanInEditeMode}')
+          thead
+            tr
+              th No.
+              th Book
+              th Patron
+              th Loaned On
+              th Return By
+              th Returned On
+              th Actions
+          tbody(class='angular-animate' ng-repeat='loan in vm.loansList')
+            tr(ng-class='{"table-disabled": vm.loanInEditeMode}' ng-hide='loan.editMode')
+              td(ng-bind='loan.id')
+              td
+                span(ng-bind='loan.Book.title')
+              td
+                span(ng-bind='loan.Patron.full_name')
+              td
+                span(ng-bind='vm.dateDisplayFormat(loan.loaned_on)')
+              td
+                span(ng-bind='vm.dateDisplayFormat(loan.return_by)')
+              td
+                span(ng-bind='vm.dateDisplayFormat(loan.returned_on)')
+                span(ng-if='!loan.returned_on') Not returned yet
+              td
+                button(class='btn btn-sm btn-primary btn-block' ng-click='vm.edit(loan)' ng-disabled='vm.loanInEditeMode') Edit
+
+            tr(name='loan.form' class='table-info' ng-if='loan.editMode' ng-form)
+              td(ng-bind='loan.id')
+              td
+                select(name='book' class='form-control form-control-sm' ng-model='loan.Book' ng-change='loan.changed = true' ng-options='book.title group by vm.getAvailableStatus(book) disable when !book.available for book in vm.titlesList | orderBy: "title" track by book.id' loan-validator)
+              td
+                select(name='patron' class='form-control form-control-sm' ng-model='loan.Patron' ng-change='loan.changed = true' ng-options='patron.full_name for patron in vm.patronNamesList | orderBy: "full_name" track by patron.id' loan-validator)
+              td(ng-class='{"has-danger": loan.form.loaned_on.$invalid && (loan.form.loaned_on.$dirty || loan.form.$submitted)}')
+                input(type='date' name='loaned_on' class='form-control form-control-sm' ng-model='loan.loaned_on' ng-change='loan.changed = true' min='2000-01-01' max='{{vm.datePostFormat(getTomorrow())}}' loan-validator required)
+              td(ng-class='{"has-danger": loan.form.return_by.$invalid && (loan.form.return_by.$dirty || loan.form.$submitted)}')
+                input(type='date' name='return_by' class='form-control form-control-sm' ng-model='loan.return_by' ng-change='loan.changed = true' loan-validator required)
+              td
+                input(type='date' name='returned_on' class='form-control form-control-sm' ng-model='loan.returned_on' ng-change='loan.changed = true' ng-show='loan.returned_on' ng-min='loan.loaned_on' max='{{vm.datePostFormat(getTomorrow())}}')
+                button(class='btn btn-sm btn-success' ng-if='!loan.returned_on' ng-click='return(loan);') Returned
+              td
+                button(class='btn btn-sm btn-primary btn-block' ng-if='loan.changed' ng-click='vm.save(loan)') Save
+                button(class='btn btn-sm btn-primary btn-block' ng-if='!loan.changed' ng-click='vm.cancel(loan)') Close
+                button(class='btn btn-sm btn-warning btn-block' ng-if='loan.changed' ng-click='vm.cancel(loan)') Cancel
+                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.delete(loan, $index)') Delete

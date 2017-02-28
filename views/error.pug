@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  .container
+    .jumbotron.bg-info.text-white
+      .text-center
+        h1.display-3 Status Code: #{error.status}
+        p.lead Error Message: #{message}
+        hr.my-4
+        pre.text-left.text-white #{error.stack}
+        a(href='/' class='btn btn-secondary btn-lg') Go Back

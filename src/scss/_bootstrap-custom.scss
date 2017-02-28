@@ -1,0 +1,13 @@
+@function getColor() {
+  @if global-variable-exists(color) {
+    @return $color;
+  }
+  @else {
+    @return #007ab8;
+  }
+}
+
+// colors
+$brand-primary: getColor() !default;
+//fonts
+//$font-family-base: 'Raleway', sans-serif;

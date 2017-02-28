@@ -1,0 +1,67 @@
+.loader.w-100(ng-if='vm.booksList[0] === "loading"')
+  img(src='images/loader.svg')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.booksList[0] === "timeout"')
+  .alert.alert-danger
+    h4.alert-heading Gateway timeout
+    p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
+    p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
+
+.app-main(ng-show='vm.patronsList[0] !== "loading" && vm.patronsList[0] !== "timeout"')
+  .container-fluid
+    .card
+      .head
+        h3 Current Table: {{vm.currentFilter}} Patrons
+        p.small.text-info You can filter the table with the filter icons in the top menu
+
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.currentFilter === "All" && vm.patronsList.length < 1')
+        .alert.alert-info
+          h4.alert-heading No Patrons Found!
+          p You can add new patron by using the options panel in the top menu.
+          p.small.mb-0 However, if this message isn't eventually replaced, try to refrash the page.
+
+      .table-responsive(ng-show='vm.patronsList.length > 0')
+        table(class='table striped mb-0' ng-class='{"table-hover": !vm.patronInEditeMode}')
+          thead
+            tr
+              th First Name
+              th Last Name
+              th Address
+              th Email
+              th Library ID
+              th ZIP Code
+              th Actions
+          tbody(class='angular-animate' ng-repeat='patron in vm.patronsList')
+            tr(ng-class='{"table-disabled": vm.patronInEditeMode}' ng-hide='patron.editMode')
+              td
+                span(ng-bind='patron.first_name')
+              td
+                span(ng-bind='patron.last_name')
+              td
+                span(ng-bind='patron.address')
+              td
+                span(ng-bind='patron.email')
+              td
+                span(ng-bind='patron.library_id')
+              td
+                span(ng-bind='patron.zip_code')
+              td
+                button(class='btn btn-sm btn-primary btn-block' ng-click='vm.edit(patron)' ng-disabled='vm.patronInEditeMode') Edit
+
+            tr(name='patron.form' class='table-info' ng-if='patron.editMode' ng-form)
+              td(ng-class='{"has-danger": patron.form.fname.$invalid && (patron.form.fname.$dirty || patron.form.$submitted)}')
+                input(type='text' name='fname' class='form-control form-control-sm' ng-model='patron.first_name' ng-change='patron.changed = true' patron-validator required)
+              td(ng-class='{"has-danger": patron.form.lname.$invalid && (patron.form.lname.$dirty || patron.form.$submitted)}')
+                input(type='text' name='lname' class='form-control form-control-sm' ng-model='patron.last_name' ng-change='patron.changed = true' patron-validator required)
+              td(ng-class='{"has-danger": patron.form.address.$invalid && (patron.form.address.$dirty || patron.form.$submitted)}')
+                input(type='text' name='address' class='form-control form-control-sm' ng-model='patron.address' ng-change='patron.changed = true' patron-validator required)
+              td(ng-class='{"has-danger": patron.form.email.$invalid && (patron.form.email.$dirty || patron.form.$submitted)}')
+                input(type='email' name='email' class='form-control form-control-sm' ng-model='patron.email' ng-change='patron.changed = true' patron-validator required)
+              td
+                span(ng-bind='patron.library_id')
+              td(ng-class='{"has-danger": patron.form.zip.$invalid && (patron.form.zip.$dirty || patron.form.$submitted)}')
+                input(type='number' name='zip' class='form-control form-control-sm' ng-model='patron.zip_code' ng-change='patron.changed = true' min='10000' max='999999999999' ng-minlength='5' ng-maxlength='12' patron-validator required)
+              td
+                button(class='btn btn-sm btn-primary btn-block' ng-if='patron.changed' ng-click='vm.save(patron)') Save
+                button(class='btn btn-sm btn-primary btn-block' ng-if='!patron.changed' ng-click='vm.cancel(patron)') Close
+                button(class='btn btn-sm btn-warning btn-block' ng-if='patron.changed' ng-click='vm.cancel(patron)') Cancel
+                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.delete(patron, $index)') Delete

@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .overlay
+    .wrapper
+      img(src='images/render.svg')
+  div(class='app-wrapper' ng-app='slim')
+    div(class='app-container' ng-controller='MainCtrl as vm')
+      .sidebar
+        .header
+          h5 Slim
+        ul.nav.flex-column
+          li(ng-class='{active: vm.getUrl() === "books"}')
+            a(href='/books')
+              i.fa.fa-book
+              span Books
+          li(ng-class='{active: vm.getUrl() === "patrons"}')
+            a(href='/patrons')
+              i.fa.fa-users
+              span Patrons
+          li(ng-class='{active: vm.getUrl() === "loans"}')
+            a(href='/loans')
+              i.fa.fa-clock-o
+              span Loans
+          li
+            a(href='/logout')
+              i.fa.fa-sign-out
+              span Logout
+      .app-main-container
+        top-header(title='vm.header.title' filters='vm.header.filters' switch-filter='vm.header.switchFilter' current-filter='vm.header.currentFilter' search-query='searchQuery' search-filter='vm.header.searchFilter' panel='panel')
+        .app-content
+          div(class='view angular-animate' ng-view)
+          panels(panel='panel' authors-list='vm.authorsList' genres-list='vm.genresList' titles-list='vm.titlesList' patron-names-list='vm.patronNamesList')
+
+  script(src='/js/libs.min.js')
+  script(src='/js/app.min.js')

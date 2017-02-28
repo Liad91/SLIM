@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  .container.text-center.my-5
+    h1.display-4 Welcome to Slim
+    p.lead Single Page Library Manager
+
+  .container
+    .row
+      .col-md-6.offset-md-3
+
+        if error
+          .alert.alert-warning
+            strong Oh snap! 
+            | #{error}
+
+        div(class='card text-center mx-auto' style='width: 20rem;')
+          .card-block(style='background: #09c;')
+            img(class='w-75' src='/images/user.jpg' alt='Card image cap')
+          .card-block
+            form(method='post' action='/login')
+              .fieldset
+                legend Please Login
+                p
+                  input(type='text' id='username' name='username' class='form-control w-75 pl-2 mx-auto' placeholder='Username')
+                p
+                  input(type='password' id='password' name='password' class='form-control w-75 pl-2 mx-auto' placeholder='Password')
+                input(type='submit' class='btn btn-secondary' value='Login')

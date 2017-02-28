@@ -1,0 +1,16 @@
+nav.mt-3
+  ul.pagination.justify-content-center
+    li.page-item(ng-if='totalPages > paginationLength' ng-class='{"disabled": currentPage === 1}')
+      a(href='' ng-click='navigate(1)' class='page-link')
+        i.fa.fa-angle-double-left
+    li.page-item(ng-class='{"disabled": currentPage === 1}')
+      a(href='' ng-click='navigate(currentPage - 1)' class='page-link')
+        i.fa.fa-angle-left
+    li.page-item(ng-repeat='page in nav' ng-class='{"active": currentPage === page}')
+      a(href='' ng-click='navigate(page)' class='page-link' ng-bind='page')
+    li.page-item(ng-class='{"disabled": currentPage === totalPages}')
+      a(href='' ng-click='navigate(currentPage + 1)' class='page-link')
+        i.fa.fa-angle-right
+    li.page-item(ng-if='totalPages > paginationLength' ng-class='{"disabled": currentPage === totalPages}')
+      a(href='' ng-click='navigate(totalPages)' class='page-link')
+        i.fa.fa-angle-double-right

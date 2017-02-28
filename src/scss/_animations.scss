@@ -1,0 +1,47 @@
+// Reset
+
+.ng-leave {
+  transition: none;
+}
+
+.animated.medium {
+  -webkit-animation-duration: $medium;
+  animation-duration: $medium;
+}
+
+// Animations
+.view {
+  @include fadeIn($fast);
+}
+
+.row {
+  @include fadeInDown($fast);
+  @include fadeOutUp($fast);
+}
+
+.panel.main {
+  @include fadeInRight($fast);
+  &.ng-hide-add {
+    display: none;
+  }
+}
+
+.panel.new {
+  @include fadeInLeft($fast);
+  &.ng-hide-add {
+    display: none;
+  }
+}
+
+table tbody {
+  @include fadeIn($fast);
+  @include fadeOut($fast);
+  // &.ng-enter-stagger {
+  //   transition-delay: 0.1s;
+  //   transition-duration: 0s;
+  // }
+  // &.ng-leave-stagger {
+  //   transition-delay: 0.1s;
+  //   transition-duration: 0s;
+  // }
+}
