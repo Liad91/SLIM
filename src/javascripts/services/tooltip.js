@@ -3,36 +3,34 @@ angular
   .service('Tooltip', Tooltip);
 
 function Tooltip() {
-  var self = this;
-
-  self.create = function(element) {
+  this.create = element => {
     $(element).tooltip({
-      title: function() {
+      title() {
         return $(this).attr('title');
       },
       trigger: 'manual'
     });
   };
 
-  self.dispose = function(element) {
+  this.dispose = element => {
     $(element).attr('data-original-title', '');
     $(element).tooltip('dispose');
   };
 
-  self.show = function(element) {
+  this.show = element => {
     $(element).tooltip('show');
   };
 
-  self.hide = function(element) {
+  this.hide = element => {
     $(element).tooltip('hide');
   }
 
-  self.disposeAll = function() {
+  this.disposeAll = () => {
     $('.tooltip').tooltip('dispose');
   }
 
-  self.array = function(tooltips, method) {
-    angular.forEach(tooltips, function(tooltip) {
+  this.array = (tooltips, method) => {
+    angular.forEach(tooltips, tooltip => {
       $(tooltip.element).tooltip(method)
     });
   };

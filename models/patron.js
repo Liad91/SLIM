@@ -34,14 +34,19 @@ module.exports = function(sequelize, DataTypes) {
         Patron.hasMany(models.Loan, {constraints: true, onDelete: 'cascade', hooks: true});
       }
     },
-     hooks: {
+    getterMethods: {
+      full_name: function() {
+        return this.first_name + ' ' + this.last_name;
+      }
+    },
+    hooks: {
       afterCreate: function(patron) {
         var library_id = 'MCL' + (1000 + patron.id);
         return patron.update({
           library_id: library_id 
         });
       }
-     }
+    }
   });
   return Patron;
 };

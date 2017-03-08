@@ -2,9 +2,9 @@ angular
   .module('slim')
   .controller('PatronsCtrl', PatronsCtrl);
 
-PatronsCtrl.$inject = ['$scope', 'Data', 'Broadcast' ,'Noty', 'Tooltip'];
+PatronsCtrl.$inject = ['$scope', 'Data', 'State', 'Broadcast' ,'Noty', 'Tooltip'];
 
-function PatronsCtrl($scope, Data, Broadcast, Noty, Tooltip) {
+function PatronsCtrl($scope, Data, State, Broadcast, Noty, Tooltip) {
 
   const vm = this;
 
@@ -14,7 +14,7 @@ function PatronsCtrl($scope, Data, Broadcast, Noty, Tooltip) {
 
   const services = ['patrons'];
 
-  Data.subscribe(vm, services);
+  Data.watch(vm, services);
 
   $scope.$on('$destroy', function() {
     Data.unsubscribe(vm, services);
@@ -26,6 +26,8 @@ function PatronsCtrl($scope, Data, Broadcast, Noty, Tooltip) {
       });
     }
   });
+
+  State.get(vm, 'loans');
 
   /**
    * Set Table Filters
@@ -46,7 +48,7 @@ function PatronsCtrl($scope, Data, Broadcast, Noty, Tooltip) {
    * Emit header data to MainCtrl
    */
 
-  Broadcast.set('header-data', {
+  Broadcast.set('navigation', {
     title: 'Patrons',
     currentFilter: vm.currentFilter,
     filters: vm.filters,

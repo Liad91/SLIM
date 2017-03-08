@@ -8,19 +8,17 @@ function authorValidator(Tooltip) {
   return {
     restrict: 'A',
     require: 'ngModel',
-    link: function(scope, element, attrs, ctrl) {
+    link(scope, element, attrs, ctrl) {
       const input = attrs.name;
       // Define empty tooltips array in the form object
       const form = ctrl.$$parentForm;
       form.tooltips = [];
 
-      ctrl.$validators.letters = function(modelValue, viewValue) {
+      ctrl.$validators.letters = modelValue => {
         if (modelValue) {
-          const regex = /^[a-zA-Z']*$/
-          if (modelValue.search(regex)) {
-            return false;
-          }
-          return true;
+          const regex = /^[a-zA-Z']*$/;
+
+          return modelValue.search(regex) ? false : true;
         }
       };
 
@@ -54,8 +52,8 @@ function authorValidator(Tooltip) {
             Tooltip.create(element);
             // push the element into the form.tooltips array
             form.tooltips.push({
-              input: input,
-              element: element,
+              input,
+              element,
               pristine: ctrl.$pristine
             });
             // show only if the field is dirty (changed)
@@ -72,7 +70,7 @@ function authorValidator(Tooltip) {
         else {
           // Dispose tooltip if exists and remove it from form.tooltips array
           if(element.attr('data-original-title')) {
-            angular.forEach(form.tooltips, function(tooltip, index) {
+            angular.forEach(form.tooltips, (tooltip, index) => {
               if (tooltip.input === input) {
                 form.tooltips.splice(index, 1);
                 Tooltip.dispose(element);

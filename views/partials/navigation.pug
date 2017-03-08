@@ -1,0 +1,30 @@
+header.page-header
+  .container-fluid
+    .app-content.pt-2
+      .left
+        .title 
+          h5.mb-0 {{title}}
+        .filters.small
+          span Filter By:
+          div(class='filter-item' ng-repeat='filter in filterList' ng-class='{active: filter.name === state.currentFilter}')
+            a(href='' ng-click='switchFilter({filter: filter.name})')
+              i(class='fa {{filter.icon}}')
+              | {{filter.name}}
+
+          span Items per page:
+          select(ng-model='itemsPerPage' ng-change='setItemsPerPage()')
+            option(ng-repeat='num in [5, 10, 25]' value='{{num}}') {{num}}
+
+          span Pagination Length:
+          select(ng-model='paginationLength' ng-change='setPaginationLength()')
+            option(ng-repeat='num in [3, 5, 10]' value='{{num}}') {{num}}
+      .right
+        .menu
+          configs
+          a(href='' ng-click='panel = !panel' ng-class='{active: panel}')
+            i.fa.fa-bars
+        form(class='form-inline query')
+          .input-group
+            input(type='text' class='form-control form-control-sm' ng-model='state.searchQuery' ng-change='search({newVal: state.searchQuery, oldVal: "{{state.searchQuery}}"})' ng-focus='wider = true' ng-blur='wider = false' ng-class='{wider: wider || panel}' placeholder='Search')
+            .input-group-addon
+              i.fa.fa-search

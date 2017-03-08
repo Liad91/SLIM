@@ -25,7 +25,7 @@ function routes($routeProvider, $locationProvider) {
     controllerAs: 'vm',
     templateUrl: 'templates/pages/books',
     resolve: {
-      clearServices: clearServices
+      clearServices
     }
   })
 
@@ -34,7 +34,7 @@ function routes($routeProvider, $locationProvider) {
     controllerAs: 'vm',
     templateUrl: 'templates/pages/patrons',
     resolve: {
-      clearServices: clearServices
+      clearServices
     }
   })
 
@@ -43,13 +43,13 @@ function routes($routeProvider, $locationProvider) {
     controllerAs: 'vm',
     templateUrl: 'templates/pages/loans',
     resolve: {
-      clearServices: clearServices
+      clearServices
     }
   })
 
   .when('/logout', {
     resolve: {
-      clearCokie: clearCookie
+      clearCookie
     }
   })
 

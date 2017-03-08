@@ -16,7 +16,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
       titlesList: '=',
       patronNamesList: '='
     },
-    link: function(scope, element, attrs) {
+    link(scope, element, attrs) {
 
       /**
        * Initial Data
@@ -65,31 +65,31 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
        * Forms Methods
        */
 
-      scope.reset = function(object, name) {
+      scope.reset = (object, name) => {
         // reset obj properties
         angular.extend(object, controls[name]);
         object.form.$setPristine();
-        // hide tooltips
-        Tooltip.array(object.form.tooltips, 'hide');
+        // dispose tooltips
+        Tooltip.array(object.form.tooltips, 'dispose');
       };
 
-      scope.close = function(cat) {
+      scope.close = cat => {
         Tooltip.array(cat.form.tooltips, 'hide');
         cat.panel = false;
       };
 
-      scope.open = function(cat) {
+      scope.open = cat => {
         cat.panel = true;
         if (cat.form.$submitted || cat.form.$dirty) {
           // wait for animation and show tooltips
-          $timeout(function() {
+          $timeout(() => {
             // If form submitted show all tooltips
             if (cat.form.$submitted) {
               Tooltip.array(cat.form.tooltips, 'show');
             }
             // If form not submitted show only dirty controls tooltips
             else {
-              angular.forEach(cat.form.tooltips, function(tooltip) {
+              angular.forEach(cat.form.tooltips, tooltip => {
                 if (!tooltip.pristine) {
                   Tooltip.show(tooltip.element);
                 }
@@ -99,7 +99,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         }
       };
 
-      scope.createBook = function() {
+      scope.createBook = () => {
         const book = scope.book;
 
         book.form.$setSubmitted();
@@ -114,10 +114,10 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
             available: book.quantity
           };
           Data.post(data, 'books')
-            .then(function() {
+            .then(() => {
               success(book, 'book');
             })
-            .catch(function() {
+            .catch(() => {
               error('book');
             });
         }
@@ -126,7 +126,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         } 
       };
 
-      scope.createAuthor = function() {
+      scope.createAuthor = () => {
         const author = scope.author;
 
         author.form.$setSubmitted();
@@ -136,10 +136,10 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
             name: author.fname + ' ' + author.lname
           };
           Data.post(data, 'authors')
-            .then(function() {
+            .then(() => {
               success(author, 'author');
             })
-            .catch(function() {
+            .catch(() => {
               error('author');
             });
         }
@@ -148,7 +148,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         } 
       };
 
-      scope.createGenre = function() {
+      scope.createGenre = () => {
         const genre = scope.genre;
 
         genre.form.$setSubmitted();
@@ -158,10 +158,10 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
             genre: genre.genre
           };
           Data.post(data, 'genres')
-            .then(function() {
+            .then(() => {
               success(genre, 'genre');
             })
-            .catch(function() {
+            .catch(() => {
               error('genre');
             });
         }
@@ -170,7 +170,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         } 
       };
 
-      scope.createLoan = function() {
+      scope.createLoan = () => {
         const loan = scope.loan;
 
         loan.form.$setSubmitted();
@@ -183,10 +183,10 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
             return_by: Dates.datePostFormat(loan.return_by)
           };
           Data.post(data, 'loans')
-            .then(function() {
+            .then(() => {
               success(loan, 'loan');
             })
-            .catch(function() {
+            .catch(() => {
               error('loan');
             });
         }
@@ -195,7 +195,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         }
       };
 
-      scope.createPatron = function() {
+      scope.createPatron = () => {
         const patron = scope.patron;
 
         patron.form.$setSubmitted();
@@ -209,10 +209,10 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
             zip_code: patron.zip_code
           };
           Data.post(data, 'patrons')
-            .then(function() {
+            .then(() => {
               success(patron, 'patron');
             })
-            .catch(function() {
+            .catch(() => {
               error('patron');
             });
         }
@@ -222,12 +222,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
       };
 
       // Group books by availablity
-      scope.getAvailableStatus = function(book) {
-        if (book.available > 0) {
-          return 'Available';
-        }
-        return 'Unavailable';
-      };
+      scope.getAvailableStatus = book => book.available > 0 ? 'Available' : 'Unavailable';
 
       /**
        * Helpers function

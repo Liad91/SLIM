@@ -2,29 +2,23 @@ angular
   .module('slim')
   .controller('MainCtrl', MainCtrl);
 
-  MainCtrl.$inject = ['$scope','$location', 'Data' ,'Broadcast'];
+  MainCtrl.$inject = ['$scope','$location', 'Data', 'Broadcast'];
   
   function MainCtrl($scope, $location, Data, Broadcast) {
 
     const vm = this;
 
-    vm.getUrl = function() {
-      return $location.url().split('/')[1];
-    };
+    vm.getUrl = () => $location.url().split('/')[1];
       
     /**
      * Data watchers
      */
 
-    const services = ['titles', 'genres', 'authors', 'patronNames'];
+    const categories = ['titles', 'genres', 'authors', 'patronNames'];
 
-    Data.subscribe(vm, services);
+    Data.watch(vm, categories);
 
-    $scope.$on('$destroy', function() {
-      Data.unsubscribe(vm, services);
+    Broadcast.get($scope, 'navigation', (event, data) => {
+      vm.nav = data;
     });
-
-    Broadcast.get($scope, 'header-data', function(event, data) {
-      vm.header = data;
-    })
   };

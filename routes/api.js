@@ -7,71 +7,66 @@ const models = require('../models');
  */
 
 /** Get books */
-router.get('/books', function(req, res, next) {
-  let attributes = {};
-  let include = [models.Genre, models.Author];
-  if (req.query.titles) { 
-    attributes = ['id', 'title', 'available'];
-    include = [];
-  }
+router.get('/books', (req, res, next) => {
+  const attributes = req.query.titles ? ['id', 'title', 'available'] : {};
+  const include = req.query.titles ? [] : [models.Genre, models.Author];
+
   models.Book.findAll({
     attributes: attributes,
     include: include
   })
-    .then(function(books) {
+    .then(books => {
       res.send(books);
     });
 });
 
 /** Create book */
-router.post('/books', function(req, res, next) {
+router.post('/books', (req, res, next) => {
   models.Book.create(req.body)
-    .then(function(book) {
-      return book.dataValues.id;
-    })
-    .then(function(id) {
+    .then(book => book.dataValues.id)
+    .then(id => {
       return models.Book.findById(id, {
         include: [models.Genre, models.Author]
       });
     })
-    .then(function(book) {
+    .then(book => {
       res.send(book);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     })
 });
 
 /** Update book */
-router.put('/books/:id', function(req, res, next) {
+router.put('/books/:id', (req, res, next) => {
   models.Book.findById(req.params.id)
-    .then(function(book){
+    .then(book => {
       if (!book) {
         throw new Error();
       }
       return book.update(req.body);
     })
-    .then(function(book) {
+    .then(book => {
       res.send(book);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);        
     });
 });
 
 /** Delete book */
-router.delete('/books/:id', function(req, res, next) {
+router.delete('/books/:id', (req, res, next) => {
   models.Book.findById(req.params.id)
-    .then(function(book) {
+    .then(book => {
       if (!book) {
         throw new Error();
       }
       return book.destroy();
     })
-    .then(function() {
+    .then(() => {
       res.sendStatus(200);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });
@@ -81,60 +76,54 @@ router.delete('/books/:id', function(req, res, next) {
  */
 
 /** Get patrons */
-router.get('/patrons', function(req, res, next) {
-  let attributes = {};
-  if (req.query.names) {  
-    attributes = ['id', [models.sequelize.literal("first_name || ' ' || last_name"), 'full_name']]
-  }
-  models.Patron.findAll({
-    attributes: attributes
-  })
-    .then(function(patrons) {
+router.get('/patrons', (req, res, next) => {
+  models.Patron.findAll()
+    .then(patrons => {
       res.send(patrons);
     });
 });
 
 /** Create patron */
-router.post('/patrons', function(req, res, next) {
+router.post('/patrons', (req, res, next) => {
   models.Patron.create(req.body)
-    .then(function(patron) {
+    .then(patron => {
       res.send(patron);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     })
 });
 
 /** Update patron */
-router.put('/patrons/:id', function(req, res, next) {
+router.put('/patrons/:id', (req, res, next) => {
   models.Patron.findById(req.params.id)
-    .then(function(patron){
+    .then(patron => {
       if (!patron) {
         throw new Error();
       }
       return patron.update(req.body);
     })
-    .then(function(patron) {
+    .then(patron => {
       res.send(patron);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);        
     });
 });
 
 /** Delete patron */
-router.delete('/patrons/:id', function(req, res, next) {
+router.delete('/patrons/:id', (req, res, next) => {
   models.Patron.findById(req.params.id)
-    .then(function(patron) {
+    .then(patron => {
       if (!patron) {
         throw new Error();
       }
       return patron.destroy();
     })
-    .then(function() {
+    .then(() => {
       res.sendStatus(200);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });
@@ -144,12 +133,12 @@ router.delete('/patrons/:id', function(req, res, next) {
  */
 
 /** Get loans */
-router.get('/loans', function(req, res, next) {
+router.get('/loans', (req, res, next) => {
   models.Loan.findAll({
     include: [
         {
           model: models.Patron,
-          attributes: ['id', [models.sequelize.literal("first_name || ' ' || last_name"), 'full_name']]
+          attributes: ['id', 'first_name', 'last_name']
         },
         {
           model: models.Book,
@@ -157,23 +146,21 @@ router.get('/loans', function(req, res, next) {
         }
       ]
   })
-    .then(function(loans) {
+    .then(loans => {
       res.send(loans);
     });
 });
 
 /** Create loan */
-router.post('/loans', function(req, res, next) {
+router.post('/loans', (req, res, next) => {
   models.Loan.create(req.body)
-    .then(function(loan) {
-      return loan.dataValues.id;
-    })
-    .then(function(id) {
+    .then(loan => loan.dataValues.id)
+    .then(id => {
       return models.Loan.findById(id, {
         include: [
           {
             model: models.Patron,
-            attributes: ['id', [models.sequelize.literal("first_name || ' ' || last_name"), 'full_name']]
+            attributes: ['id', 'first_name', 'last_name']
           },
           {
             model: models.Book,
@@ -182,28 +169,28 @@ router.post('/loans', function(req, res, next) {
         ]
       })
     })
-    .then(function(loan) {
+    .then(loan => {
       res.send(loan)
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     })
 });
 
 /** Update loan */
-router.put('/loans/:id', function(req, res, next) {
+router.put('/loans/:id', (req, res, next) => {
   let oldLoan;
   let newLoan;
 
   models.Loan.findById(req.params.id)
-    .then(function(loan){
+    .then(loan => {
       if (!loan) {
         throw new Error();
       }
       oldLoan = Object.assign({}, loan.dataValues);
       return loan.update(req.body);
     })
-    .then(function(loan) {
+    .then(loan => {
       newLoan = Object.assign({}, loan.dataValues);
       // check if loan book was returned
       if (!oldLoan.returned_on && newLoan.returned_on) {
@@ -226,25 +213,24 @@ router.put('/loans/:id', function(req, res, next) {
 
       res.send(loan);
     })
-    .catch(function(error) {
-      console.log(error)        
+    .catch(error => {       
       res.sendStatus(403);        
     });
 });
 
 /** Delete loan */
-router.delete('/loans/:id', function(req, res, next) {
+router.delete('/loans/:id', (req, res, next) => {
   models.Loan.findById(req.params.id)
-    .then(function(loan) {
+    .then(loan => {
       if (!loan) { 
         throw new Error();
       }
       return loan.destroy();
     })
-    .then(function(loan) {
+    .then(loan => {
       res.send(loan);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });
@@ -254,24 +240,23 @@ router.delete('/loans/:id', function(req, res, next) {
  */
 
 /** Get genres  */
-router.get('/genres', function(req, res, next) {
+router.get('/genres', (req, res, next) => {
   models.Genre.findAll()
-    .then(function(genres) {
+    .then(genres => {
       res.send(genres);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });
 
 /** Create genre */
-router.post('/genres', function(req,res, next) {
+router.post('/genres', (req, res, next) => {
   models.Genre.create(req.body)
-    .then(function(genre) {
+    .then(genre => {
       res.send(genre)
     })
-    .catch(function() {
-      console.log(req.body);
+    .catch(() => {
       res.sendStatus(403);
     });
 });
@@ -281,23 +266,23 @@ router.post('/genres', function(req,res, next) {
  */
 
 /** Get authors  */
-router.get('/authors', function(req, res, next) {
+router.get('/authors', (req, res, next) => {
   models.Author.findAll()
-    .then(function(authors) {
+    .then(authors => {
       res.send(authors);
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });
 
 /** Create author */
-router.post('/authors', function(req,res, next) {
+router.post('/authors', (req, res, next) => {
   models.Author.create(req.body)
-    .then(function(author) {
+    .then(author => {
       res.send(author)
     })
-    .catch(function() {
+    .catch(() => {
       res.sendStatus(403);
     });
 });

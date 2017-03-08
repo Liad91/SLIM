@@ -1,18 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var gulp = require('../gulpfile');
-var path = require('path');
-var fs = require('fs');
+const express = require('express');
+const router = express.Router();
+const gulp = require('../gulpfile');
+const path = require('path');
+const fs = require('fs');
 
-router.post('/css', function(req, res, next) {
-  var configFile = path.join(__dirname, '../src/scss/_configs.scss');
-  var data = req.body.colors.join(' ');
+router.post('/css', (req, res, next) => {
+  const configFile = path.join(__dirname, '../src/scss/_configs.scss');
+  const data = req.body.colors.join(' ');
 
-  gulp.task('compile', ['dist-css'], function () {
+  gulp.task('compile', ['dist-css'], () => {
     res.end();
     fs.writeFile(configFile, '');
   });
-  fs.writeFile(configFile, data, function() {
+  fs.writeFile(configFile, data, () => {
     gulp.start('compile');
   });
 });

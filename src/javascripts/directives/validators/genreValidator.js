@@ -11,14 +11,14 @@ function genreValidator(Tooltip) {
     scope: {
       genres: '='
     },
-    link: function(scope, element, attrs, ctrl) {
+    link(scope, element, attrs, ctrl) {
       // Define empty tooltips array in the form object
       const form = ctrl.$$parentForm;
       form.tooltips = [];
 
-      element.ready(function() {
+      element.ready(() => {
         // set watcher for scope.genres array
-        scope.$watch('genres', function(genres) {
+        scope.$watch('genres', genres => {
           // set uniqueValidator if scope.genres array not empty
           if(genres.length > 1) {
             uniqueValidator();
@@ -29,9 +29,7 @@ function genreValidator(Tooltip) {
         function uniqueValidator() {
           let genre = '';
           const genresList = scope.genres;
-          const genres = genresList.map(function(genre) {
-            return genre.genre.toLowerCase();
-          })
+          const genres = genresList.map(genre => genre.genre.toLowerCase());
 
           // set genre from modelValue if the ctrl is pristine and have a modelValue
           if (ctrl.$modelValue && ctrl.$pristine) {
@@ -45,13 +43,11 @@ function genreValidator(Tooltip) {
             genres.splice(index, 1);
           }
 
-          ctrl.$validators.unique = function(modelValue, viewValue) {
+          ctrl.$validators.unique = modelValue => {
             if (modelValue) {
               const genre = modelValue.toLowerCase();
-              if (genres.indexOf(genre) > -1) {
-                return false;
-              }
-              return true;
+
+              return genres.indexOf(genre) > -1 ? false : true;
             }
           };
         }
@@ -77,7 +73,7 @@ function genreValidator(Tooltip) {
             Tooltip.create(element);
             // push the element into the form.tooltips array
             form.tooltips.push({
-              element: element,
+              element,
               pristine: ctrl.$pristine
             });
             // show only if the field is dirty (changed)

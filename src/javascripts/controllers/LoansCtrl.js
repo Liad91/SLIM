@@ -14,7 +14,7 @@ function LoansCtrl($scope, Data, Broadcast, Dates, Noty, Tooltip) {
 
   const services = ['loans', 'titles', 'patronNames'];
 
-  Data.subscribe(vm, services);
+  Data.watch(vm, services);
 
   $scope.$on('$destroy', function() {
     Data.unsubscribe(vm, services);
@@ -36,17 +36,14 @@ function LoansCtrl($scope, Data, Broadcast, Dates, Noty, Tooltip) {
   };
 
   vm.getAvailableStatus = function(book) {
-    if (book.available > 0) {
-      return 'Available';
-    }
-    return 'Unavailable';
+    return book.available > 0 ? 'Available' : 'Unavailable';
   };
 
   /** 
    * Emit header data to MainCtrl
    */
 
-  Broadcast.set('header-data', {
+  Broadcast.set('navigation', {
     title: 'Loans',
     currentFilter: vm.currentFilter,
     filters: vm.filters,

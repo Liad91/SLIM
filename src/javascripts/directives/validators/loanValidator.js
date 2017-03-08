@@ -8,7 +8,7 @@ function loanValidator($compile, Tooltip, Dates) {
   return {
     restrict: 'A',
     require: 'ngModel',
-    link: function(scope, element, attrs, ctrl) {
+    link(scope, element, attrs, ctrl) {
       const input = attrs.name;
       // Define empty tooltips array in the form object
       const form = ctrl.$$parentForm;
@@ -96,8 +96,8 @@ function loanValidator($compile, Tooltip, Dates) {
             Tooltip.create(element);
             // Push the element into the form.tooltips array
             form.tooltips.push({
-              input: input,
-              element: element,
+              input,
+              element,
               pristine: ctrl.$pristine
             });
             // Show only if the field is dirty (touched)
@@ -118,7 +118,7 @@ function loanValidator($compile, Tooltip, Dates) {
         else {
           // Dispose tooltip if exists and remove it from form.tooltips array
           if(element.attr('data-original-title')) {
-            angular.forEach(form.tooltips, function(tooltip, index) {
+            angular.forEach(form.tooltips, (tooltip, index) => {
               if (tooltip.input === input) {
                 form.tooltips.splice(index, 1);
                 Tooltip.dispose(element);

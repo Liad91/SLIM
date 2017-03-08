@@ -1,6 +1,6 @@
 {
-  "name": "library-manager",
-  "version": "0.0.0",
+  "name": "slim",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",

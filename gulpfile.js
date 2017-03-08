@@ -12,72 +12,75 @@ const babel = require('gulp-babel');
 const del = require('del');
 
 /** Settings and paths */
-const settings = new function() {
-  this.src = 'src/';
-  this.bower = 'bower_components/';
-  this.dist = 'dist/';
+const settings = new class Settings {
+  constructor() {
+    this.src = 'src/';
+    this.bower = 'bower_components/';
+    this.dist = 'dist/';
 
-  this.env = process.env.NODE_ENV || 'development';
+    this.env = process.env.NODE_ENV || 'development';
 
-  this.dest = {
-    scripts: this.dist + 'js',
-    styles: this.dist + 'css',
-    fonts: this.dist + 'fonts',
-    images: this.dist + 'images'
-  };
+    this.dest = {
+      scripts: this.dist + 'js',
+      styles: this.dist + 'css',
+      fonts: this.dist + 'fonts',
+      images: this.dist + 'images'
+    };
 
-  this.libraries = {
-    angular: this.bower + 'angular/',
-    ngCookies: this.bower + 'angular-cookies/',
-    ngRoute: this.bower + 'angular-route/',
-    ngAnimate: this.bower + 'angular-animate/',
-    jquery: this.bower + 'jquery/',
-    tether: this.bower + 'tether/',
-    noty: this.bower + 'noty/',
-    bootstrap: this.bower + 'bootstrap/',
-    fontAwesome: this.bower + 'font-awesome/',
-    animate: this.bower + 'animate.css/'
-  };
+    this.libraries = {
+      angular: this.bower + 'angular/',
+      ngCookies: this.bower + 'angular-cookies/',
+      ngRoute: this.bower + 'angular-route/',
+      ngAnimate: this.bower + 'angular-animate/',
+      jquery: this.bower + 'jquery/',
+      tether: this.bower + 'tether/',
+      noty: this.bower + 'noty/',
+      bootstrap: this.bower + 'bootstrap/',
+      fontAwesome: this.bower + 'font-awesome/',
+      animate: this.bower + 'animate.css/'
+    };
 
-  this.js = {
-    libs: {
-      angular: this.libraries.angular + 'angular.min.js',
-      ngCookies: this.libraries.ngCookies + 'angular-cookies.min.js',
-      ngRoute: this.libraries.ngRoute + 'angular-route.min.js',
-      ngAnimate: this.libraries.ngAnimate + 'angular-animate.min.js',
-      jquery: this.libraries.jquery + 'dist/jquery.min.js',
-      tether: this.libraries.tether + 'dist/js/tether.min.js',
-      bootstrap: this.libraries.bootstrap + 'dist/js/bootstrap.min.js',
-      noty: this.libraries.noty + 'js/noty/packaged/jquery.noty.packaged.min.js',
-    },
-    app: {
-      files: this.src + 'javascripts/**/*.js',
-      main: this.src + 'javascripts/app.js',
-      routes: this.src + 'javascripts/routes.js',
-      initialData: this.src + 'javascripts/initialData.js',
-      animation: this.src + 'javascripts/animation.js',
-      controllers: this.src + 'javascripts/controllers/*.js',
-      services: this.src + 'javascripts/services/*.js',
-      directives: this.src + 'javascripts/directives/**/*.js'
-    }
-  };
+    this.js = {
+      libs: {
+        angular: this.libraries.angular + 'angular.min.js',
+        ngCookies: this.libraries.ngCookies + 'angular-cookies.min.js',
+        ngRoute: this.libraries.ngRoute + 'angular-route.min.js',
+        ngAnimate: this.libraries.ngAnimate + 'angular-animate.min.js',
+        jquery: this.libraries.jquery + 'dist/jquery.min.js',
+        tether: this.libraries.tether + 'dist/js/tether.min.js',
+        bootstrap: this.libraries.bootstrap + 'dist/js/bootstrap.min.js',
+        noty: this.libraries.noty + 'js/noty/packaged/jquery.noty.packaged.min.js',
+      },
+      app: {
+        files: this.src + 'javascripts/**/*.js',
+        main: this.src + 'javascripts/app.js',
+        routes: this.src + 'javascripts/routes.js',
+        init: this.src + 'javascripts/init.js',
+        animation: this.src + 'javascripts/animation.js',
+        controllers: this.src + 'javascripts/controllers/*.js',
+        services: this.src + 'javascripts/services/*.js',
+        directives: this.src + 'javascripts/directives/**/*.js',
+        filters: this.src + 'javascripts/filters/*.js'
+      }
+    };
 
-  this.styles = {
-    files: this.src + 'scss/**/*.scss',
-    bootstrap: this.libraries.bootstrap + 'scss',
-    fontAwesome: this.libraries.fontAwesome + 'scss',
-    animate: this.libraries.animate,
-    main: this.src + 'scss/main.scss'
-  };
+    this.styles = {
+      files: this.src + 'scss/**/*.scss',
+      bootstrap: this.libraries.bootstrap + 'scss',
+      fontAwesome: this.libraries.fontAwesome + 'scss',
+      animate: this.libraries.animate,
+      main: this.src + 'scss/main.scss'
+    };
 
-  this.fonts = {
-    fontAwesome: this.libraries.fontAwesome + 'fonts/*'
-  };
+    this.fonts = {
+      fontAwesome: this.libraries.fontAwesome + 'fonts/*'
+    };
+  }
 };
 
 /** Concat all the styles into one file */
-gulp.task('dist-css', function() {
-  var config = {
+gulp.task('dist-css', () => {
+  const config = {
     includePaths: [settings.styles.bootstrap, settings.styles.fontAwesome, settings.styles.animate]
   };
 
@@ -93,7 +96,7 @@ gulp.task('dist-css', function() {
 });
 
 /** Concat all the scripts into one file */
-gulp.task('dist-libs-js', function() {
+gulp.task('dist-libs-js', () => {
   return gulp.src([
     settings.js.libs.angular,
     settings.js.libs.ngRoute,
@@ -111,15 +114,16 @@ gulp.task('dist-libs-js', function() {
 });
 
 /** Concat all the scripts into one file */
-gulp.task('dist-app-js', function() {
+gulp.task('dist-app-js', () => {
   return gulp.src([
     settings.js.app.main,
     settings.js.app.routes,
-    settings.js.app.initialData,
+    settings.js.app.init,
     settings.js.app.animation,
     settings.js.app.controllers,
     settings.js.app.services,
-    settings.js.app.directives
+    settings.js.app.directives,
+    settings.js.app.filters
   ])
     .pipe(gulpif(settings.env === 'development', sourcemaps.init()))
     .pipe(babel({
@@ -145,13 +149,13 @@ gulp.task('dist-app-js', function() {
 });
 
 /** Move the font awesome fonts to dist directory */
-gulp.task('dist-icons', function() {
+gulp.task('dist-icons', () => {
   return gulp.src(settings.fonts.fontAwesome)
     .pipe(gulp.dest(settings.dest.fonts));
 });
 
 /** Optimize all images and move them to dist directory */
-gulp.task('dist-images', function() {
+gulp.task('dist-images', () => {
   return gulp.src(settings.src + 'images/*')
     .pipe(image({
       svgo: false
@@ -160,18 +164,18 @@ gulp.task('dist-images', function() {
 });
 
 /** Watch for changes in .js and .scss files */
-gulp.task('watch', function() {
+gulp.task('watch', () => {
   gulp.watch(settings.js.app.files, ['dist-app-js']);
   gulp.watch(settings.styles.files, ['dist-css']);
 });
 
 /** Delete dist directory */
-gulp.task('clean:dist', function() {
+gulp.task('clean:dist', () => {
   return del('dist');
 });
 
 /** Run all build tasks after the clean task */
-gulp.task('build', ['clean:dist'], function() {
+gulp.task('build', ['clean:dist'], () => {
   return gulp.start('dist-css', 'dist-libs-js', 'dist-app-js', 'dist-icons', 'dist-images');
 });
 

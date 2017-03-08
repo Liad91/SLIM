@@ -1,99 +1,102 @@
-.loader.w-100(ng-if='vm.booksList[0] === "loading"')
+.loader.w-100(ng-if='vm.books.data[0] === "loading"')
   img(src='images/loader.svg')
-div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.booksList[0] === "timeout"')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.books.data[0] === "timeout"')
   .alert.alert-danger
     h4.alert-heading Gateway timeout
     p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
     p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
     
-.app-main(ng-show='vm.booksList[0] !== "loading" && vm.booksList[0] !== "timeout"')
+.app-main(ng-show='vm.books.data[0] !== "loading" && vm.books.data[0] !== "timeout"')
   .container-fluid
     .card
       .head
         h3 Current Table: All Books
-        p.small.text-info You can filter the table with the filter icons in the top menu
+        p.small.text-info You can sort the table by clicking on the headers below
 
-      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.books.length < 1 && !vm.searchQuery')
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && !vm.state.searchQuery')
         .alert.alert-info
           h4.alert-heading No Books Found!
           p You can add new book by using the options panel in the top menu.
           p.small.mb-0 However, if this message isn't eventually replaced, try to refrash the page.
 
-      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.books.length < 1 && vm.searchQuery')
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && vm.state.searchQuery')
         .alert.alert-info
           h4.alert-heading No Books Found!
           .alert-body.text-left
             h5 Search Help:
             ul
-              li Check your search for typos.
-              li Use fewer words.
-              li Add spaces between words.
-              li The book you're searching for has been removed.
+              li Check your search for typos
+              li(ng-if='vm.state.currentFilter !== "All"')
+                a(href='' ng-click='vm.table.switchFilter("All")') Change filter
+              li Use fewer words
+              li Add spaces between words
               
-      .table-responsive(ng-show='vm.books.length > 0')
+      .table-responsive(ng-show='vm.table.displayedData.length > 0')
         table(class='table table-hover striped mb-0')
           thead
             tr
               th
-                a(href='' ng-click='vm.sortBy("title")' ng-class='{"active": vm.orderBy === "title"}') Title
+                a(href='' ng-click='vm.table.sortBy("title")' ng-class='{"active": vm.state.sortBy === "title"}') Title
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "title" && !vm.reverse, "fa-arrow-up": vm.orderBy === "title" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "title" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "title" && vm.state.sortReverse}')
               th
-                a(href='' ng-click='vm.sortBy("Author.name")' ng-class='{"active": vm.orderBy === "Author.name"}') Author
+                a(href='' ng-click='vm.table.sortBy("Author.name")' ng-class='{"active": vm.state.sortBy === "Author.name"}') Author
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "Author.name" && !vm.reverse, "fa-arrow-up": vm.orderBy === "Author.name" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "Author.name" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "Author.name" && vm.state.sortReverse}')
               th
-                a(href='' ng-click='vm.sortBy("Genre.genre")' ng-class='{"active": vm.orderBy === "Genre.genre"}') Genre
+                a(href='' ng-click='vm.table.sortBy("Genre.genre")' ng-class='{"active": vm.state.sortBy === "Genre.genre"}') Genre
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "Genre.genre" && !vm.reverse, "fa-arrow-up": vm.orderBy === "Genre.genre" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "Genre.genre" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "Genre.genre" && vm.state.sortReverse}')
               th
-                a(href='' ng-click='vm.sortBy("first_published")' ng-class='{"active": vm.orderBy === "first_published"}') First Published
+                a(href='' ng-click='vm.table.sortBy("first_published")' ng-class='{"active": vm.state.sortBy === "first_published"}') First Published
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "first_published" && !vm.reverse, "fa-arrow-up": vm.orderBy === "first_published" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "first_published" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "first_published" && vm.state.sortReverse}')
               th
-                a(href='' ng-click='vm.sortBy("quantity")' ng-class='{"active": vm.orderBy === "quantity"}') Quantity
+                a(href='' ng-click='vm.table.sortBy("quantity")' ng-class='{"active": vm.state.sortBy === "quantity"}') Quantity
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "quantity" && !vm.reverse, "fa-arrow-up": vm.orderBy === "quantity" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "quantity" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "quantity" && vm.state.sortReverse}')
               th
-                a(href='' ng-click='vm.sortBy("available")' ng-class='{"active": vm.orderBy === "available"}') Available
+                a(href='' ng-click='vm.table.sortBy("available")' ng-class='{"active": vm.state.sortBy === "available"}') Available
                 small
-                  i.fa(ng-class='{"fa-arrow-down": vm.orderBy === "available" && !vm.reverse, "fa-arrow-up": vm.orderBy === "available" && vm.reverse}')
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "available" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "available" && vm.state.sortReverse}')
               th Actions
-          tbody(ng-repeat='book in vm.books')
+          tbody(ng-repeat='book in vm.table.displayedData')
             tr(ng-hide='book.editMode')
-              td(ng-click='vm.edit(book, $index)')
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.title')
-              td(ng-click='vm.edit(book, $index)')
+                br
+                small(style='color:red;' ng-if='book.changed') Draft
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.Author.name')
-              td(ng-click='vm.edit(book, $index)')
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.Genre.genre')
-              td(ng-click='vm.edit(book, $index)')
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.first_published')
-              td(ng-click='vm.edit(book, $index)')
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.quantity')
-              td(ng-click='vm.edit(book, $index)')
+              td(ng-click='vm.table.edit(book, $index)')
                 span(ng-bind='book.available')
-              td(ng-click='vm.edit(book, $index)')
-                button(class='btn btn-sm btn-primary btn-block' ng-click='vm.edit(book, $index)') Edit
+              td(ng-click='vm.table.edit(book, $index)')
+                button(class='btn btn-sm btn-primary btn-block' ng-click='vm.table.edit(book, $index)') Edit
 
             tr(name='book.form' class='table-active' ng-if='book.editMode' ng-form)
               td(ng-class='{"has-danger": book.form.title.$invalid && (book.form.title.$dirty || book.form.$submitted)}')
-                input(type='text' name='title' class='form-control form-control-sm' ng-model='book.title' ng-change='book.changed = true' titles='vm.titlesList' book-validator required)
+                input(type='text' name='title' class='form-control form-control-sm' ng-model='book.title' ng-change='book.modified = true' titles='vm.titles' book-validator required)
               td(ng-class='{"has-danger": book.form.author.$invalid && (book.form.author.$dirty || book.form.$submitted)}')
-                select(name='author' class='form-control form-control-sm' ng-model='book.Author' ng-change='book.changed = true' ng-options='author.name for author in vm.authorsList | orderBy:"name" track by author.id' book-validator)
+                select(name='author' class='form-control form-control-sm' ng-model='book.Author' ng-change='book.modified = true' ng-options='author.name for author in vm.authors | orderBy:"name" track by author.id' book-validator)
               td(ng-class='{"has-danger": book.form.genre.$invalid && (book.form.genre.$dirty || book.form.$submitted)}')
-                select(name='genre' class='form-control form-control-sm' ng-model='book.Genre' ng-change='book.changed = true' ng-options='genre.genre for genre in vm.genresList | orderBy:"genre" track by genre.id' book-validator)
+                select(name='genre' class='form-control form-control-sm' ng-model='book.Genre' ng-change='book.modified = true' ng-options='genre.genre for genre in vm.genres | orderBy:"genre" track by genre.id' book-validator)
               td(ng-class='{"has-danger": book.form.published.$invalid && (book.form.published.$dirty || book.form.$submitted)}')
-                input(type='number' name='published' class='form-control form-control-sm' ng-model='book.first_published' ng-change='book.changed = true' min='1800' max='{{getCurrentYear()}}' book-validator required)
+                input(type='number' name='published' class='form-control form-control-sm' ng-model='book.first_published' ng-change='book.modified = true' min='1800' max='{{getCurrentYear()}}' book-validator required)
               td(ng-class='{"has-danger": book.form.quantity.$invalid && (book.form.quantity.$dirty || book.form.$submitted)}')
-                input(type='number' name='quantity' class='form-control form-control-sm' ng-model='book.quantity' ng-change='book.changed = true' book-validator required)
+                input(type='number' name='quantity' class='form-control form-control-sm' ng-model='book.quantity' ng-change='book.modified = true' min='{{book.loaned}}' book-validator required)
               td
                 span(ng-bind='book.available')
                 input(type='hidden' name='available' ng-model='book.available')
               td
-                button(class='btn btn-sm btn-primary btn-block' ng-if='book.changed' ng-click='vm.save(book)') Save
-                button(class='btn btn-sm btn-primary btn-block' ng-if='!book.changed' ng-click='vm.cancel(book)') Close
-                button(class='btn btn-sm btn-warning btn-block' ng-if='book.changed' ng-click='vm.cancel(book)') Cancel
-                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.delete(book, $index)') Delete
+                button(class='btn btn-sm btn-primary btn-block' ng-if='book.modified' ng-click='vm.table.save(book)') Save
+                button(class='btn btn-sm btn-primary btn-block' ng-if='!book.modified' ng-click='vm.table.cancel(book)') Close
+                button(class='btn btn-sm btn-warning btn-block' ng-if='book.modified' ng-click='vm.table.cancel(book)') Cancel
+                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.table.delete(book, $index)') Delete
 
-        pagination(list='vm.booksFilteredList' current-page='vm.currentPage' set-page='vm.setPage')
+        pagination(nav='vm.table.nav' current-page='vm.state.currentPage' set-page='vm.table.setPage(page)' total-pages='vm.table.totalPages' length='vm.state.paginationLength')

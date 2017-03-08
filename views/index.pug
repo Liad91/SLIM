@@ -27,10 +27,10 @@ block content
               i.fa.fa-sign-out
               span Logout
       .app-main-container
-        top-header(title='vm.header.title' filters='vm.header.filters' switch-filter='vm.header.switchFilter' current-filter='vm.header.currentFilter' search-query='searchQuery' search-filter='vm.header.searchFilter' panel='panel')
+        navigation(title='vm.nav.title' panel='panel' category='vm.nav.category' filter-list='vm.nav.filterList' switch-filter='vm.nav.switchFilter(filter)' changeable='vm.nav.changeable()' search='vm.nav.search(newVal, oldVal)' adjust='vm.nav.adjust(force)')
         .app-content
           div(class='view angular-animate' ng-view)
-          panels(panel='panel' authors-list='vm.authorsList' genres-list='vm.genresList' titles-list='vm.titlesList' patron-names-list='vm.patronNamesList')
+          panels(panel='panel' authors-list='vm.authors' genres-list='vm.genres' titles-list='vm.titles' patron-names-list='vm.patronNames')
 
   script(src='/js/libs.min.js')
   script(src='/js/app.min.js')

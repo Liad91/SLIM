@@ -1,337 +1,333 @@
-angular
-  .module('slim')
-  .service('Data', Data);
+// angular
+//   .module('slim')
+//   .service('Data', Data);
 
-Data.$inject = ['Api'];
+// Data.$inject = ['Api'];
 
-function Data(Api) {
+// function Data(Api) {
 
-  /**
-   * Service object
-   */
+//   function Data() {
 
-  const service = {
-    set: set,
-    post: post,
-    put: put,
-    del: del,
-    subscribe: subscribe,
-    unsubscribe: unsubscribe
-  };
+//     const service = {};
 
-  return service;
+//     /** Set new category */
+//     this.set = function(categories) {
+//     	angular.forEach(categories, function(category) {
+//       	service[category.name] = {};
+        
+//         const categoryObject = service[category.name];
+        
+//         categoryObject.watchers = [];
+//         categoryObject.data = [];
 
-  /**
-   * Handlers functions
-   */
+//         if (category.post) {
+//           categoryObject.post = category.post;
+//         }
 
-  function set(objects) {
-    angular.forEach(objects, function(object) {
-      service[object.category] = {};
+//         if (category.put) {
+//           categoryObject.put = category.put;
+//         }
 
-      const category = service[object.category];
+//         if (category.del) {
+//           categoryObject.del = category.del;
+//         }
+        
+//         Object.defineProperty(categoryObject, data, {
+//           get: function() {
+//           	return categoryObject.data;
+//           },
+//           set: function(arr) {
+//             if(!angular.isArray(arr)) {
+//               throw new Error('category must be an array');
+//             }
+//             categoryObject.data = arr;
+//             angular.forEach(categoryObject.watchers, function(watcher) {
+//             	watcher = arr;
+//             });
+//           }
+//         });
 
-      category.subscribers = [];
-      category.data = ['loading'];
+//         category.get
+//           .then(function(resp) {
+//             if (category.name === 'loans') {
+//               resp.data = strDateToObj(resp.data);
+//             }
+//             categoryObject.data = resp.data;
+//           })
+//           .catch(function(error) {
+//             categoryObject.data = ['timeout'];
+//           });
+//       });
+//     };
 
-      if (object.post) {
-        category.post = object.post;
-      }
+//     this.watch = function(scope, categories) {
+//       if(!angular.isArray(categories)) {
+//         throw new Error('Data.watch method require array of categories to watch on.');
+//       }
 
-      if (object.put) {
-        category.put = object.put;
-      }
+//       angular.forEach(categories, function(category) {
+//         if (!angular.isObject(service[category])) {
+//           throw new Error(`Invalid category name! ${category} is not an object.`);
+//         }
 
-      if (object.del) {
-        category.del = object.del;
-      }
+//         Object.defineProperty(scope, category, {
+//           get: function() {
+//             return service[category].data;
+//           },
+//           set: function(arr) {
+//             if(!angular.isArray(arr)) {
+//               throw new Error('Category must be an array');
+//             }
+//             service[category].data = arr;
+//           }
+//         });
 
-      object.promise
-        .then(function(resp) {
-          if (object.category === 'loans') {
-            resp.data = strDateToObj(resp.data);
-          }
-          angular.extend(category.data, resp.data);
-          notify(object.category);
-        })
-        .catch(function(error) {
-          category.data = ['timeout'];
-          notify(object.category);
-        })
-    });
-  }
+//         service[category].watchers.push(scope[category]);
+//       });
+//     };
 
-  function post(data, category) {
-    if (!service[category].post) {
-      throw new Error(`The ${category} category does not contain a post method`);
-    }
+//     this.unwatch = function(scope, categories) {
+//       if(!angular.isArray(categories)) {
+//         throw new Error('Data.unwatch method require array of categories to watch on.');
+//       }
 
-    return service[category].post(data)
-      .then(function(resp) {
-        if (category === 'loans') {
-          resp.data = strDateToObj(resp.data);
-        }
-        service[category].data.push(resp.data);
-        notify(category);
+//       angular.forEach(categories, function(category) {
+//         if (!angular.isObject(service[category])) {
+//           throw new Error(`Invalid category name! ${category} is not an object.`);
+//         }
 
-        // Update service.titles.data
-        if (category === 'books') {
-          const title = {
-            id: resp.data.id,
-            title: resp.data.title,
-            available: resp.data.available
-          };
-          service.titles.data.push(title);
-          notify('titles');
-        }
+//         const index = service[category].watchers.indexOf(scope[category]);
 
-        // Update books availablity
-        if (category === 'loans') {
-          borrowBook(data.book_id);
-        }
+//         service[category].watchers.splice(index, 1);
+//       });
+//     };
 
-        // Update service.patronNames
-        if (category === 'patrons') {
-          const patron = {
-            id: resp.data.id,
-            full_name: `${resp.data.first_name} ${resp.data.last_name}`
-          }
-          service.patronNames.data.push(patron);
-          notify('patronNames');
-        }
-      })
-      .catch(function(error) {
-        throw new Error(error);
-      });
-  }
+//     this.post = function(data, category) {
+//       if (!service[category].post) {
+//         throw new Error(`${category} category does not contain a post method`);
+//       }
 
-  function put(id, data, category, adjust) {
-    if (!service[category].put) {
-      throw new Error(`The ${category} category does not contain a put method`);
-    }
+//       return service[category].post(data)
+//         .then(function(resp) {
+//           if (category === 'loans') {
+//             resp.data = strDateToObj(resp.data);
+//           }
+//           service[category].data.push(resp.data);
 
-    return service[category].put(id, data)
-      .then(function(resp) {
-        if (category === 'loans') {
-          resp.data = strDateToObj(resp.data);
-        }
-        for(let i = 0; i < service[category].data.length; i++) {
-          const data = service[category].data[i];
+//           // Update service.titles.data
+//           if (category === 'books') {
+//             const title = {
+//               id: resp.data.id,
+//               title: resp.data.title,
+//               available: resp.data.available
+//             };
+//             service.titles.data.push(title);
+//           }
 
-          if (data.id === resp.data.id) {
-            angular.extend(data, resp.data);
-            notify(category);
+//           // Update books availablity
+//           if (category === 'loans') {
+//             borrowBook(data.book_id);
+//           }
 
-            if (category === 'books' && adjust) {
-              // Update service.titles.data
-              for (let i = 0; i < service.titles.data.length; i++) {
-                const data = service.titles.data[i];
+//           // Update service.patronNames
+//           if (category === 'patrons') {
+//             const patron = {
+//               id: resp.data.id,
+//               full_name: `${resp.data.first_name} ${resp.data.last_name}`
+//             }
+//             service.patronNames.data.push(patron);
+//           }
+//         })
+//         .catch(function(error) {
+//           throw new Error(error);
+//         });
+//     };
 
-                if (data.id === resp.data.id) {
-                  angular.extend(data, resp.data);
-                  notify('titles');
-                  break;
-                }
-              }
+//     this.put = function(id, data, category, adjust) {
+//       if (!service[category].put) {
+//         throw new Error(`${category} category does not contain a put method`);
+//       }
 
-              // Update service.loans.data
-              angular.forEach(service.loans.data, function(data) {
-                if (data.Book.id === id) {
-                 data.Book.title = resp.data.title;
-                }
-              });
-              notify('loans');
-            }
-            
-            // Update books availablity
-            if (category === 'loans' && adjust) {
-              returnBook(adjust);
-              borrowBook(resp.data.book_id);
-            }
+//       return service[category].put(id, data)
+//         .then(function(resp) {
+//           if (category === 'loans') {
+//             resp.data = strDateToObj(resp.data);
+//           }
+//           for(let i = 0; i < service[category].data.length; i++) {
+//             let data = service[category].data[i];
 
-            if (category === 'patrons' && adjust) {
-              const full_name = `${resp.data.first_name} ${resp.data.last_name}`
+//             if (data.id === resp.data.id) {
+//               angular.extend(data,resp.data);
 
-              // Update service.patronNames.data
-              for (let i = 0; i < service.patronNames.data.length; i++) {
-                const data = service.patronNames.data[i];
-                if (data.id === id) {
-                  data.full_name = full_name;
-                  notify('patronNames');
-                  break;
-                }
-              }
+//               if (category === 'books' && adjust) {
+//                 // Update service.titles.data
+//                 for (let i = 0; i < service.titles.data.length; i++) {
+//                   let data = service.titles.data[i];
+                  
+//                   if (data.id === resp.data.id) {
+//                     const title = {
+//                       id: resp.data.id,
+//                       title: resp.data.title,
+//                       available: resp.data.available
+//                     }
+//                     angular.extend(data, title);
+//                     break;
+//                   }
+//                 }
 
-              // Update service.loans.data
-              angular.forEach(service.loans.data, function(data, index) {
-                if (data.Patron.id === id) {
-                 data.Patron.full_name = full_name;
-                }
-              });
-              notify('loans');
-            }
-            break;
-          }
-        }
-      });
-  }
+//                 // Update service.loans.data
+//                 angular.forEach(service.loans.data, function(data) {
+//                   if (data.Book.id === id) {
+//                     data.Book.title = resp.data.title;
+//                   }
+//                 });
+//               }
+              
+//               // Update books availablity
+//               if (category === 'loans' && adjust) {
+//                 returnBook(adjust);
+//                 borrowBook(resp.data.book_id);
+//               }
 
-  function del(id, category) {
-    if (!service[category].del) {
-      throw new Error(`The ${category} category does not contain a delete method`);
-    }
+//               if (category === 'patrons' && adjust) {
+//                 const full_name = `${resp.data.first_name} ${resp.data.last_name}`
 
-    return service[category].del(id)
-      .then(function(resp) {
-        for(let i = 0; i < service[category].data.length; i++) {
-          const data = service[category].data[i];
+//                 // Update service.patronNames.data
+//                 for (let i = 0; i < service.patronNames.data.length; i++) {
+//                   const data = service.patronNames.data[i];
 
-          if (data.id === id) {
-            service[category].data.splice(i, 1);
+//                   if (data.id === id) {
+//                     data.full_name = full_name;
+//                     break;
+//                   }
+//                 }
 
-            // remove the data from each subscriber.
-            angular.forEach(service[category].subscribers, function(data) {
-              data.splice(i, 1);
-            });
+//                 // Update service.loans.data
+//                 angular.forEach(service.loans.data, function(data, index) {
+//                   if (data.Patron.id === id) {
+//                     data.Patron.full_name = full_name;
+//                   }
+//                 });
+//               }
+//               break;
+//             }
+//           }
+//         });
+//     };
 
-            if (category === 'books') {
-              // Update service.titles.data
-              for (let i = 0; i < service.titles.data.length; i++) {
-                const data = service.titles.data[i];
-                if(data.id === id) {
-                  service.titles.data.splice(i, 1);
-                  break;
-                }
-              }
-              notify('titles');
+//     this.del = function(id, category) {
+//       if (!service[category].del) {
+//         throw new Error(`${category} category does not contain a delete method`);
+//       }
 
-              // Update service.loans.data
-              service.loans.data = service.loans.data.filter(function(data) {
-                if (data.book_id !== id) {
-                  return data;
-                }
-              })
-              notify('loans');
-            }
+//       return service[category].del(id)
+//         .then(function(resp) {
+//           for(let i = 0; i < service[category].data.length; i++) {
+//             const data = service[category].data[i];
 
-            // Update books availablity
-            if (category === 'loans') {
-              returnBook(resp.data.book_id);
-            }
+//             if (data.id === id) {
+//               service[category].data.splice(i, 1);
 
-            if (category === 'patrons') {
-              // Update service.patronNames.data
-              service.patronNames.data = service.patronNames.data.filter(function(data) {
-                if (data.id !== id) {
-                  return data;
-                }
-              });
-              notify('patronNames');
+//               if (category === 'books') {
+//                 // Update service.titles.data
+//                 for (let i = 0; i < service.titles.data.length; i++) {
+//                   const data = service.titles.data[i];
+//                   if(data.id === id) {
+//                     service.titles.data.splice(i, 1);
+//                     break;
+//                   }
+//                 }
 
-              // Update service.loans.data
-              service.loans.data = service.loans.data.filter(function(data) {
-                if (data.Patron.id !== id) {
-                  return data;
-                }
-              });
-              notify('loans');
-            }
-            break;
-          }
-        }
-      });
-  }
+//                 // Update service.loans.data
+//                 service.loans.data = service.loans.data.filter(function(data) {
+//                   if (data.book_id !== id) {
+//                     return data;
+//                   }
+//                 });
+//               }
 
-  function strDateToObj(data) {
-    // if it's array
-    if (angular.isArray(data)) {
-      return data.map(function (loan) {
-        loan.loaned_on = new Date(loan.loaned_on);
-        loan.return_by = new Date(loan.return_by);
-        if (loan.returned_on) {
-          loan.returned_on = new Date(loan.returned_on);
-        }
-        return loan;
-      });
-    }
-    // if it's object
-    else if(angular.isObject(data)){
-      data.loaned_on = new Date(data.loaned_on);
-      data.return_by = new Date(data.return_by);
-      if (data.returned_on) {
-        data.returned_on = new Date(data.returned_on);
-      }
-      return data;
-    }
-  }
+//               // Update books availablity
+//               if (category === 'loans') {
+//                 returnBook(resp.data.book_id);
+//               }
 
-  function borrowBook(id) {
-    const categories = [service.titles, service.books];
+//               if (category === 'patrons') {
+//                 // Update service.patronNames.data
+//                 service.patronNames.data = service.patronNames.data.filter(function(data) {
+//                   if (data.id !== id) {
+//                     return data;
+//                   }
+//                 });
 
-    angular.forEach(categories, function(category) {
-      for(let i = 0; i < category.data.length; i++) {
-        const data = category.data[i];
-        if (data.id === id) {
-          data.available -= 1;
-          notify(category);
-          break;
-        }
-      }
-    });
-  }
+//                 // Update service.loans.data
+//                 service.loans.data = service.loans.data.filter(function(data) {
+//                   if (data.Patron.id !== id) {
+//                     return data;
+//                   }
+//                 });
+//               }
+//               break;
+//             }
+//           }
+//         });
+//     };
 
-  function returnBook(id) {
-    const categories = [service.titles, service.books];
+//     /**
+//      * Helpers Functions
+//      */
 
-    angular.forEach(categories, function(category) {
-      for(let i = 0; i < category.data.length; i++) {
-        const data = category.data[i];
-        if (data.id === id) {
-          data.available += 1;
-          notify(category);
-          break;
-        }
-      }
-    });
-  }
+//     function strDateToObj(data) {
+//       if (angular.isArray(data)) {
+//         return data.map(function (loan) {
+//           loan.loaned_on = new Date(loan.loaned_on);
+//           loan.return_by = new Date(loan.return_by);
+//           if (loan.returned_on) {
+//             loan.returned_on = new Date(loan.returned_on);
+//           }
+//           return loan;
+//         });
+//       }
+//       // if it's object
+//       else if (angular.isObject(data)){
+//         data.loaned_on = new Date(data.loaned_on);
+//         data.return_by = new Date(data.return_by);
+//         if (data.returned_on) {
+//           data.returned_on = new Date(data.returned_on);
+//         }
+//         return data;
+//       }
+//     }
 
+//     function borrowBook(id) {
+//       const categories = [service.titles, service.books];
 
-  /**
-   * Subscribers managment functions
-   */
+//       angular.forEach(categories, function(category) {
+//         for (let i = 0; i < category.data.length; i++) {
+//           const data = category.data[i];
+//           if (data.id === id) {
+//             data.available -= 1;
+//             break;
+//           }
+//         }
+//       });
+//     }
 
-  function subscribe(scope, categories) {
-    angular.forEach(categories, function(category) {
-      const propertyName = `${category}List`;
-      const data = service[category].data;
-      
-      scope[propertyName] = [];
-      
-      service[category].subscribers.push(scope[propertyName]);
-      angular.extend(scope[propertyName], data);
-    });
-  }
+//     function returnBook(id) {
+//       const categories = [service.titles, service.books];
 
-  function unsubscribe(scope, categories) {
-    angular.forEach(categories, function(category) {
-      const propertyName = `${category}List`;
-      const index = service[category].subscribers.indexOf(scope[propertyName]);
+//       angular.forEach(categories, function(category) {
+//         for (let i = 0; i < category.data.length; i++) {
+//           const data = category.data[i];
+//           if (data.id === id) {
+//             data.available += 1;
+//             break;
+//           }
+//         }
+//       });
+//     }
+//   }
 
-      service[category].subscribers.splice(index, 1);
-    });
-  }
+//   const data = new Data();
 
-  function notify(category) {
-    const subscribers = angular.isString(category) ? service[category].subscribers : category.subscribers;
-    const data = angular.isString(category) ? service[category].data : category.data;
-
-    angular.forEach(subscribers, function(subscriber) {
-      if(data.length < subscriber.length) {
-        angular.copy(data, subscriber);
-      }
-      else {
-        angular.extend(subscriber, data);
-      }
-    });
-  }
-}
+//   return data;
+// }

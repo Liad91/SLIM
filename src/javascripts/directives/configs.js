@@ -5,18 +5,16 @@ angular
 configs.$inject = ['$http', 'Popover'];
 
 function configs($http, Popover) {
-  function link(scope, element, attrs) {
-
-  }
   return {
     restrict: 'E',
     templateUrl: 'templates/partials/configs',
     replace: true,
     scope: {},
-    link: function(scope, element, attrs) {
-      var overlay = $('.overlay');   
-      var defaultColor = 'rgb(0,122,184)';
-      var currentColor = $('.sidebar').css('background-color');
+    link(scope, element, attrs) {
+      const overlay = $('.overlay');   
+      const defaultColor = 'rgb(0,122,184)';
+
+      let currentColor = $('.sidebar').css('background-color');
       /** Remove white spaces from currentColor */
       currentColor = currentColor.replace(/ /g,'');
 
@@ -24,7 +22,7 @@ function configs($http, Popover) {
       
       /** Update colors array with new color and check if reset button is needed */
       function updateColors(color) {
-        var index = scope.colors.indexOf(color);
+        const index = scope.colors.indexOf(color);
 
         if (scope.lastColor) {
           scope.colors.push(scope.lastColor);
@@ -37,7 +35,7 @@ function configs($http, Popover) {
 
       scope.compileCSS = function(color) {
         overlay.fadeIn(250);
-        var data = {
+        const data = {
           colors: ['$color: ' + color + ';']
         }
         // set bootstrap danger color to blue (if currentColor is red)
@@ -58,7 +56,7 @@ function configs($http, Popover) {
               $('head').children('link').first().remove();
             });
           })
-          .catch(function(error) {
+          .catch(error => {
             throw new Error('Can\'t compile new stylesheet file ' + error);
           });
       };
@@ -70,11 +68,13 @@ function configs($http, Popover) {
       };
 
       /** Popover content */
-      var content = '<div class="color-box" ng-repeat="color in colors" style="background-color: {{color}}" ng-click="compileCSS(color)"></div>';
-      content += '<a class="btn btn-sm btn-primary" ng-show="reset" ng-click="resetColor()">Reset</a>';
+      const content = `
+        <div class="color-box" ng-repeat="color in colors" style="background-color: {{color}}" ng-click="compileCSS(color)"></div>
+        <a class="btn btn-sm btn-primary" ng-show="reset" ng-click="resetColor()">Reset</a>
+      `;
 
-      element.on('mousedown', function() {
-        var hasPopover = $(element).attr('aria-describedby');
+      element.on('mousedown', () => {
+        const hasPopover = $(element).attr('aria-describedby');
 
         if (!hasPopover){
           Popover.create(element, 'bottom', 'Select Color', content, scope);

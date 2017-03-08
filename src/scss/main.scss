@@ -44,7 +44,7 @@ a {
   }
 }
 
-/** Bootstrap */
+/** extend Bootstrap */
 .table.striped tbody:nth-of-type(odd) {
   background-color: #f5f5f5;
 }
@@ -111,8 +111,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .card {
-  box-shadow: 0 2px 6px 0 rgba(0,0,0,.3);
-  -webkit-box-shadow: 0 2px 6px 0 rgba(0,0,0,.3);
+  box-shadow: 0 1px 6px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: 0 1px 6px 0 rgba(0,0,0,.15);
   .head {
     padding: 15px 15px 0;
     & > h3 {
@@ -240,14 +240,18 @@ header.page-header {
   display: flex;
   align-items: center;
   & > * {
-    margin-right: 8px; 
+    margin-right: $spacer * 0.5; 
+  }
+  & > span {
+    font-weight: 600;
+    margin-right: $spacer * 0.3; 
   }
 }
 
 .filters .filter-item {
   & + .filter-item {
     &:before {
-      padding-right: 8px;
+      padding-right: $spacer * 0.5; 
       content: '|';
     }
   }
@@ -255,13 +259,13 @@ header.page-header {
     color: $brand-primary;
   }
   a {
-    color: $gray-light;
+    color: lighten($gray-light, 15%);
     &:hover {
       color: $brand-primary;
     }
   }
   a i {
-    padding-right: 3px
+    padding-right: $spacer * 0.2;
   }
 }
 

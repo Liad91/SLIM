@@ -5,5 +5,5 @@ angular
 animation.$inject = ['$animateProvider'];
 
 function animation($animateProvider) {
-  $animateProvider.classNameFilter(/angular-animate/)
+  $animateProvider.classNameFilter(/angular-animate/);
 }

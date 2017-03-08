@@ -3,9 +3,7 @@ angular
   .service('Noty', Noty);
   
 function Noty() {
-  var self = this;
-
-  self.displayNotes = function(message, type, layout) {
+  this.displayNotes = function(message, type, layout) {
     noty({
       text: message,
       theme: 'bootstrapTheme',
@@ -22,7 +20,7 @@ function Noty() {
     });
   };
 
-  self.displayDialogs = function(message, confirmed, canceled) {
+  this.displayDialogs = (message, confirmed, canceled) => {
     noty({
       type: 'confirm',
       text: message,
@@ -34,12 +32,12 @@ function Noty() {
       },
       killer: true,
       buttons: [
-        {addClass: 'btn btn-sm btn-primary', text: 'Delete', onClick: function($noty) {
+        {addClass: 'btn btn-sm btn-primary', text: 'Delete', onClick: $noty => {
             $noty.close();
             confirmed();
           }
         },
-        {addClass: 'btn btn-sm btn-danger', text: 'Cancel', onClick: function($noty) {
+        {addClass: 'btn btn-sm btn-danger', text: 'Cancel', onClick: $noty => {
             $noty.close();
             canceled();
           }}
@@ -47,11 +45,11 @@ function Noty() {
     });
   };
 
-  self.clearQueue = function() {
+  this.clearQueue = () => {
     $.noty.clearQueue();
   };
 
-  self.closeAll = function() {
+  this.closeAll = () => {
     $.noty.closeAll();
   };
 };

@@ -5,34 +5,32 @@ angular
 Popover.$inject = ['$compile'];
 
 function Popover($compile) {
-  var self = this;
-
-  self.create = function(element, placement, title, content, scope) {
+  this.create = (element, placement, title, content, scope) => {
     $(element).popover({
-      placement: placement,
-      title: title,
+      placement,
+      title,
       html: true,
       trigger: 'manual',
       content: $compile(content)(scope)
     })
-      .on('shown.bs.popover', function() {
+      .on('shown.bs.popover', () => {
         scope.$apply();
 
-        var popover = $('.popover');
+        const popover = $('.popover');
 
         popover.attr('tabindex', '1');
         popover.focus();
         popover.on({
-          focusout: function() {
+          focusout: () => {
             // remove popover on focusout
             element.attr('aria-describedby', '');
-            self.dispose(element);
+            this.dispose(element);
           },
-          keydown: function(e) {
+          keydown: e => {
             if (e.which === 27) {
               // remove popover on Esc
               element.attr('aria-describedby', '');
-              self.dispose(element);
+              this.dispose(element);
             }
           }
         })
@@ -40,11 +38,11 @@ function Popover($compile) {
       .popover('show');
   };
 
-  self.dispose = function(element) {
+  this.dispose = element => {
     $(element).popover('dispose');
   };
 
-  self.disposeAll = function() {
+  this.disposeAll = () => {
     $('.popover').popover('dispose');
   };
 }

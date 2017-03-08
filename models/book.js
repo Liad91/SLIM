@@ -36,6 +36,11 @@ module.exports = function(sequelize, DataTypes) {
         Book.belongsTo(models.Author);
         Book.belongsTo(models.Genre);
       }
+    },
+    getterMethods: {
+      loaned: function() {
+        return this.quantity - this.available;
+      }
     }
   });
   return Book;
