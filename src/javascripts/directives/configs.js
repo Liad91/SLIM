@@ -12,13 +12,13 @@ function configs($http, Popover) {
     scope: {},
     link(scope, element, attrs) {
       const overlay = $('.overlay');   
-      const defaultColor = 'rgb(0,122,184)';
+      const defaultColor = 'rgb(53,142,215)';
 
       let currentColor = $('.sidebar').css('background-color');
       /** Remove white spaces from currentColor */
       currentColor = currentColor.replace(/ /g,'');
 
-      scope.colors = ['rgb(0,122,184)', 'rgb(132,53,51)', 'rgb(70,74,76)', 'rgb(77,57,75)', 'rgb(60,118,61)'];
+      scope.colors = ['rgb(53,142,215)', 'rgb(83,187,179)', 'rgb(131,140,199)', 'rgb(189,198,207)', 'rgb(125,200,85)'];
       
       /** Update colors array with new color and check if reset button is needed */
       function updateColors(color) {
@@ -33,36 +33,33 @@ function configs($http, Popover) {
       }
       updateColors(currentColor);
 
-      scope.compileCSS = function(color) {
+      scope.compileCSS = color => {
         overlay.fadeIn(250);
         const data = {
           colors: ['$color: ' + color + ';']
         }
-        // set bootstrap danger color to blue (if currentColor is red)
-        if (color === 'rgb(132,53,51)') {
-          data.colors.push('$brand-danger: #0275d8 !default;');
-        }
+
         // set bootstrap success color to blue (if currentColor is green)
-        else if (color === 'rgb(60,118,61)') {
-          data.colors.push('$brand-success: #0275d8 !default;');
+        if (color === 'rgb(125,200,85)') {
+          data.colors.push('$brand-success: #358ed7 !default;');
         }
         updateColors(color);
         
         // get the new css file and append it to the head
         $http.post('/compile/css', data)
-          .then(function() {
+          .then(() => {
             $('head').append('<link rel="stylesheet" href="css/main.css" type="text/css" />');
             overlay.fadeOut(250, function() {
               $('head').children('link').first().remove();
             });
           })
           .catch(error => {
-            throw new Error('Can\'t compile new stylesheet file ' + error);
+            throw new Error(`Can\'t compile new stylesheet file ${error}`);
           });
       };
 
       /** Set the color to default */
-      scope.resetColor = function() {
+      scope.resetColor = () => {
         scope.compileCSS(defaultColor);
         scope.reset = false;
       };

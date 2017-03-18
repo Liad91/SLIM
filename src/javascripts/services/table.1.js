@@ -15,7 +15,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
 
     /**
-     * set the table data
+     * Set the table data
      * @param {array} data 
      */
 
@@ -25,7 +25,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
 
     /**
-     * set the table state
+     * Set the table state
      * @param {array} state 
      */
 
@@ -34,7 +34,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
     
     /**
-     * sort the table by column
+     * Sort the table by column
      * @param {string} column 
      */
 
@@ -128,7 +128,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
 
     /**
-     * save the changes in the item to the database
+     * Save the changes in the item to the database
      * @param {object} item 
      */
 
@@ -159,7 +159,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
 
     /**
-     * enter to edit mode in the given item
+     * Enter to edit mode in the given item
      * @param {object} item 
      * @param {number} index 
      */
@@ -188,7 +188,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
     
     /**
-     * exit edit mode in the given item
+     * Exit edit mode in the given item
      * @param {object} item 
      */
 
@@ -213,7 +213,7 @@ function Table($filter, State, Data, Tooltip, Noty) {
     }
 
     /**
-     * delete item from the table
+     * Delete item from the table
      * @param {object} item
      * @param {number} index
      */

@@ -68,7 +68,6 @@ const settings = new class Settings {
       files: this.src + 'scss/**/*.scss',
       bootstrap: this.libraries.bootstrap + 'scss',
       fontAwesome: this.libraries.fontAwesome + 'scss',
-      animate: this.libraries.animate,
       main: this.src + 'scss/main.scss'
     };
 
@@ -81,7 +80,7 @@ const settings = new class Settings {
 /** Concat all the styles into one file */
 gulp.task('dist-css', () => {
   const config = {
-    includePaths: [settings.styles.bootstrap, settings.styles.fontAwesome, settings.styles.animate]
+    includePaths: [settings.styles.bootstrap, settings.styles.fontAwesome]
   };
 
   if (settings.env === 'production') {

@@ -27,7 +27,7 @@ block content
               i.fa.fa-sign-out
               span Logout
       .app-main-container
-        navigation(title='vm.nav.title' panel='panel' category='vm.nav.category' filter-list='vm.nav.filterList' switch-filter='vm.nav.switchFilter(filter)' changeable='vm.nav.changeable()' search='vm.nav.search(newVal, oldVal)' adjust='vm.nav.adjust(force)')
+        navigation(title='vm.nav.title' panel='panel' category='vm.nav.category' filter-list='vm.nav.filterList' switch-filter='vm.nav.switchFilter(filter)' changeable='vm.nav.changeable()' search='vm.nav.search(curQuery, prevQuery)' adjust='vm.nav.adjust(force)')
         .app-content
           div(class='view angular-animate' ng-view)
           panels(panel='panel' authors-list='vm.authors' genres-list='vm.genres' titles-list='vm.titles' patron-names-list='vm.patronNames')

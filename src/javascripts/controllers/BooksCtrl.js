@@ -9,7 +9,7 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   const vm = this;
 
   /** 
-   * Get API Data
+   * Get API tata
    */
 
   const categories = ['books', 'titles', 'genres', 'authors'];
@@ -17,13 +17,13 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   Data.watch(vm, categories);
 
   /**
-   * Get Table State
+   * Get table state
    */
 
   State.get(vm, 'books');
   
   /**
-   * Get Table Methods
+   * Get table methods
    */
 
   vm.table = new Table('books', update);
@@ -31,7 +31,7 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   vm.table.setState = vm.state;
 
   /**
-   * Set Table Filters
+   * Set table filters
    */
 
   Table.prototype.adjust = function(force) {
@@ -94,15 +94,15 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
     }
   };
 
-  Table.prototype.search = function(newVal, oldVal) {
+  Table.prototype.search = function(curQuery, prevQuery) {
     /** Display warning if there's open item and it was modified */
     if (this.hasModifiedItem) {
-      this.state.searchQuery = oldVal;
+      this.state.searchQuery = prevQuery;
       return Noty.displayNotes('Save your changes or cancel them before searching', 'warning');
     }
 
     /** If search input gets shorter get the data list */
-    if (oldVal && oldVal.length > newVal.length) {
+    if (prevQuery && prevQuery.length > curQuery.length) {
       return this.switchFilter(this.state.currentFilter);
     }
 
@@ -114,25 +114,26 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
 
     /** Search only if there's data */
     if (this.filteredData.length > 0) {
-      this.filteredData = $filter('filter')(this.filteredData, { title: newVal });
+      this.filteredData = $filter('filter')(this.filteredData, { title: curQuery });
       this.setPage(0);
     }
   };
 
-
   /**
-   * Set Table Filters
+   * Dates handlers
    */
-    
+
+  vm.getCurrentYear = Dates.getCurrentYear;
+
+  /** 
+   * Emit navigation data to MainCtrl
+   */
+
   const filterList = [
     { name: 'All', icon: 'fa-list-ul'},
     { name: 'Available', icon: 'fa-check-square' },
     { name: 'Unavailable', icon: 'fa-minus-square' },
   ];
-
-  /** 
-   * Emit navigation data to MainCtrl
-   */
  
   Broadcast.set('navigation', {
     title: 'Books',
@@ -144,6 +145,10 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
     adjust: vm.table.adjust.bind(vm.table)
   });
 
+  /**
+   * Set table data from API
+   */
+
   $scope.$watchCollection(() => vm.books, (list) => {
     /** Check if the data from the API arrived */
     if (list.length > 0 && list[0] !== 'loading' && list[0] !== 'timeout') {
@@ -153,6 +158,10 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
       vm.table.adjust();
     }
   });
+
+  /**
+   * Restore item data on destroy
+   */
 
   $scope.$on('$destroy', () => {
     /** Restore missing data from book.cache */
@@ -170,22 +179,16 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
       }
     }
   });
-  
-  /**
-   * Dates Handlers
-   */
-
-  vm.getCurrentYear = Dates.getCurrentYear;
 
   /**
-   * build the new 
+   * Update book
    * @param {object} book
    */
 
   function update(book) {
-    const construct = {}
+    const updatedBook = {}
 
-    construct.data = {
+    updatedBook.data = {
       title: book.title,
       author_id: book.Author.id,
       genre_id: book.Genre.id,
@@ -193,17 +196,17 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
     };
 
     let remainder;
-    // If quantity changed update quantity and available columns by the result of the new quantity minus the old quantity
+    /** If quantity changed update quantity and available columns by the result of the new quantity minus the old quantity */
     if (book.quantity !== book.cache.quantity) {
       remainder = book.quantity - book.cache.quantity;
-      construct.data.quantity = book.quantity;
-      construct.data.available = book.available + remainder;
+      updatedBook.data.quantity = book.quantity;
+      updatedBook.data.available = book.available + remainder;
     }
-    // Check if the title was changed
+    /** Check if the title was changed */
     const titleChanged = book.title !== book.cache.title ? true : false
-    // Set adjust to true if remainder || titleChanged (will cause to update of titlesList)
-    construct.adjust = remainder || titleChanged ? true : false;
+    /** Set adjust to true if remainder || titleChanged (will cause to update of titlesList) */
+    updatedBook.adjust = remainder || titleChanged ? true : false;
 
-    return construct;
+    return updatedBook;
   }
 };

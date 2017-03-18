@@ -1,4 +1,5 @@
 // Animation
+
 @mixin fadeIn($speed, $delay: 0) {
   &.ng-enter {
     transition: all $speed linear;

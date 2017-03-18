@@ -25,6 +25,6 @@ header.page-header
             i.fa.fa-bars
         form(class='form-inline query')
           .input-group
-            input(type='text' class='form-control form-control-sm' ng-model='state.searchQuery' ng-change='search({newVal: state.searchQuery, oldVal: "{{state.searchQuery}}"})' ng-focus='wider = true' ng-blur='wider = false' ng-class='{wider: wider || panel}' placeholder='Search')
+            input(type='text' class='form-control form-control-sm' ng-model='state.searchQuery' ng-change='search({curQuery: state.searchQuery, prevQuery: "{{state.searchQuery}}"})' ng-focus='wider = true' ng-blur='wider = false' ng-class='{wider: wider || panel}' placeholder='Search')
             .input-group-addon
               i.fa.fa-search

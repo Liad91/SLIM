@@ -4,24 +4,25 @@ angular
   
 function Noty() {
   this.displayNotes = function(message, type, layout) {
-    noty({
+    $('.notes').noty({
       text: message,
       theme: 'bootstrapTheme',
       type: type,
-      layout: layout || 'topCenter',
+      layout: layout || 'top',
       maxVisible: 3,
       killer: true,
       animation: {
-        open: 'animated medium fadeInDown',
-        close: 'animated medium fadeOutUp'
+        open: 'animated fadeInDown',
+        close: 'animated fadeOutUp'
       },
-      timeout: 2000,
+      timeout: 399000,
+      progressBar: true,
       template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>'
     });
   };
 
   this.displayDialogs = (message, confirmed, canceled) => {
-    noty({
+    $('.notes').noty({
       type: 'confirm',
       text: message,
       theme: 'bootstrapTheme',

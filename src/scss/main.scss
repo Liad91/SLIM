@@ -12,9 +12,6 @@
 // import font-awesome
 @import 'font-awesome';
 
-// import animate.css
-@import 'animate';
-
 @import 'variables';
 
 @import 'utilities';
@@ -94,6 +91,18 @@ select.form-control:not([size]):not([multiple]) {
   height: inherit;
 }
 
+.bg-green {
+  background-color: $green;
+}
+
+.bg-purple {
+  background-color: $purple;
+}
+
+.bg-blue {
+  background-color: $blue; 
+}
+
 /** Bootstrap helpers */
 .form-control-panel {
   padding: 0.35rem .75rem;
@@ -125,6 +134,14 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 /** Noty.js */
+
+.notes {
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
+  overflow: hidden;
+}
+
 .noty_bar {
   width: 100%;
 }
@@ -139,7 +156,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .list-group-item {
   &:first-child, &:last-child {
-    border-radius: .25rem;
+    border-radius: 0;
     margin-bottom: -43px;
   }
   &:last-child {
@@ -364,17 +381,24 @@ form.query {
 }
 
 .view {
+  position: relative;
   display: flex;
   flex: 1;
+  flex-direction: column;
+}
+
+.card-tip {
+  padding: $spacer * 1.5;
+  border: none;
 }
 
 .app-main {
   @extend .scrollbar;
+  background-color: #f5f5f5;
   flex: 1;
   height: calc(100vh - 55px);
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-top: $spacer;
   padding-bottom: $spacer;
 }
 
@@ -402,16 +426,17 @@ form.query {
   }
   .header {
     @extend .panel-tab;
-    background-color: lighten($brand-primary, 58%);
+    background-color: lighten($brand-primary, 20%);
+    color: $white;
     font-size: $font-size-base;
     span {
       font-weight: 600;
     }
     a {
       margin-left: auto;
-      color: $gray-light;
+      color: $white;
       &:hover {
-        color: $black
+        transform: scale(1.5);
       }
     }
   }
@@ -429,12 +454,16 @@ form.query {
       &:hover {
         opacity: 1;
         color: $black;
+        i + i {
+          transform: rotate(90deg);
+        }
       }
       & > i:first-child {
         margin-right: $spacer * 0.7;
         font-size: $font-size-lg;
       }
       i + i {
+        transition: $transition-base;
         margin-left: auto;
       }
       &:nth-child(1) {

@@ -5,9 +5,16 @@ div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.books.data[0] === "timeout"'
     h4.alert-heading Gateway timeout
     p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
     p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
-    
+.notes
 .app-main(ng-show='vm.books.data[0] !== "loading" && vm.books.data[0] !== "timeout"')
   .container-fluid
+    .row.my-4
+      .col-md-4
+        .card.card-tip
+      .col-md-4
+        .card.card-tip
+      .col-md-4
+        .card.card-tip
     .card
       .head
         h3 Current Table: All Books

@@ -16,7 +16,6 @@
   ],
   "dependencies": {
     "angular-animate": "^1.6.2",
-    "animate.css": "^3.5.2",
     "angular-route": "^1.6.2",
     "font-awesome": "^4.7.0",
     "bootstrap": "v4.0.0-alpha.6",
