@@ -6,16 +6,15 @@ routes.$inject = ['$routeProvider', '$locationProvider'];
 
 function routes($routeProvider, $locationProvider) {
   clearCookie.$inject = ['$cookies', '$window'];
-  clearServices.$inject = ['Noty' ,'Tooltip', 'Popover'];
+  clearServices.$inject = ['Noty', 'Popover'];
 
   function clearCookie($cookies, $window) {
     $cookies.remove('libraryManager');
     $window.location.reload()
   }
 
-  function clearServices(Noty, Tooltip, Popover) {
+  function clearServices(Noty, Popover) {
     Noty.closeAll();
-    Tooltip.disposeAll();
     Popover.disposeAll();
   }
 
