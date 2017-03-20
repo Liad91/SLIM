@@ -29,6 +29,11 @@ block content
       .app-main-container
         navigation(title='vm.nav.title' panel='panel' category='vm.nav.category' filter-list='vm.nav.filterList' switch-filter='vm.nav.switchFilter(filter)' changeable='vm.nav.changeable()' search='vm.nav.search(curQuery, prevQuery)' adjust='vm.nav.adjust(force)')
         .app-content
+          script(type='text/ng-template' id='error-messages')
+            div(class='tooltip-inner' ng-message='required') This field is required
+            div(class='tooltip-inner' ng-message='number') Invalid number
+            div(class='tooltip-inner' ng-message='date') Invalid Date
+            div(class='tooltip-inner' ng-message='letters') This field can contain only letters
           div(class='view angular-animate' ng-view)
           panels(panel='panel' authors-list='vm.authors' genres-list='vm.genres' titles-list='vm.titles' patron-names-list='vm.patronNames')
 

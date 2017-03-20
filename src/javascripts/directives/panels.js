@@ -2,9 +2,9 @@ angular
   .module('slim')
   .directive('panels', panels);
 
-panels.$inject = ['$timeout', 'Data', 'Dates', 'Noty', 'Tooltip'];
+panels.$inject = ['Data', 'Dates', 'Noty'];
 
-function panels($timeout, Data, Dates, Noty, Tooltip) {
+function panels(Data, Dates, Noty) {
   return {
     resstrict: 'E',
     templateUrl: 'templates/partials/panels',
@@ -25,7 +25,9 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
       scope.book.quantity = 0;
       scope.book.first_published = 1800;
       scope.loan.loaned_on = new Date();
-      scope.loan.return_by = Dates.getTwoWeeks()
+      scope.loan.return_by = Dates.getTwoWeeks(new Date());
+
+      scope.getCurrentYear = Dates.getCurrentYear;
 
       /**
        * Reset Data
@@ -50,7 +52,7 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
           Book: '',
           Patron: '',
           loaned_on: new Date(),
-          return_by: Dates.getTwoWeeks()
+          return_by: Dates.getTwoWeeks(new Date())
         },
         patron: {
           first_name: '',
@@ -69,34 +71,14 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
         // reset obj properties
         angular.extend(object, controls[name]);
         object.form.$setPristine();
-        // dispose tooltips
-        Tooltip.array(object.form.tooltips, 'dispose');
       };
 
       scope.close = cat => {
-        Tooltip.array(cat.form.tooltips, 'hide');
         cat.panel = false;
       };
 
       scope.open = cat => {
         cat.panel = true;
-        if (cat.form.$submitted || cat.form.$dirty) {
-          // wait for animation and show tooltips
-          $timeout(() => {
-            // If form submitted show all tooltips
-            if (cat.form.$submitted) {
-              Tooltip.array(cat.form.tooltips, 'show');
-            }
-            // If form not submitted show only dirty controls tooltips
-            else {
-              angular.forEach(cat.form.tooltips, tooltip => {
-                if (!tooltip.pristine) {
-                  Tooltip.show(tooltip.element);
-                }
-              });
-            }
-          }, 250);
-        }
       };
 
       scope.createBook = () => {
@@ -243,8 +225,6 @@ function panels($timeout, Data, Dates, Noty, Tooltip) {
       }
 
       function invalidForm(category) {
-        // show all tooltips
-        Tooltip.array(category.form.tooltips, 'show');
         // display warning message
         Noty.displayNotes('Please check the form and try again', 'warning', 'topRight');
       }

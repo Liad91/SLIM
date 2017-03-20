@@ -5,7 +5,7 @@ angular
 Dates.$inject = ['$filter'];
 
 function Dates($filter) {
-  /** Get tomorrow date */
+  /** Get the next day of given date */
   this.getTomorrow = day => {
     const date = angular.copy(day) || new Date();
     date.setDate(date.getDate() + 1);
@@ -13,7 +13,7 @@ function Dates($filter) {
     return date;
   };
 
-  /** Get 1 year + 1 day from date */
+  /** Get 1 year + 1 day from given date */
   this.getNextYear = year => {
     const date = angular.copy(year);
     date.setDate(date.getDate() + 366);
@@ -21,9 +21,9 @@ function Dates($filter) {
     return date;
   };
 
-  /** Get 2 weeks from today date */
-  this.getTwoWeeks = () => {
-    const date = new Date();
+  /** Get 2 weeks from given date */
+  this.getTwoWeeks = day => {
+    const date = angular.copy(day);
     date.setDate(date.getDate() + 14);
 
     return date;

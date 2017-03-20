@@ -1,1 +1,1 @@
-angular.module('slim', ['ngRoute', 'ngCookies', 'ngAnimate']);
+angular.module('slim', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngMessages']);

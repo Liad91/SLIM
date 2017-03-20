@@ -70,6 +70,10 @@ a {
 .table td {
   vertical-align: middle;
   cursor: pointer;
+  .form-group {
+    margin-bottom: 0;
+    position: relative;
+  }
 }
 
 .form-control-sm {
@@ -421,7 +425,10 @@ form.query {
     .body {
       padding-top: $spacer * 2;
       padding-left: $spacer;
-      padding-right: $spacer; 
+      padding-right: $spacer;
+      .form-group .tooltip {
+        margin-bottom: $spacer * -1.7;
+      }
     }
   }
   .header {
@@ -563,4 +570,28 @@ form.query {
     padding-left: $spacer * 0.75;
     padding-right: $spacer * 0.75;
   }
+}
+
+// .tooltip-inner
+.tooltip {
+  opacity: 1;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin-bottom: $spacer / 4;
+}
+
+.tooltip-inner {
+  margin: 0 auto;
+}
+
+.tooltip-inner::before {
+  border-top-color: #ebcccc;
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+  margin-bottom: -4px;
+  content: "";
+  border-width: 5px 5px 0;
 }

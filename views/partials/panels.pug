@@ -35,21 +35,35 @@
       div(name='book.form' class='row align-items-end alert-gray' ng-form novalidate)
         div(class='form-group col-md-12' ng-class='{"has-danger": book.form.title.$invalid && (book.form.title.$dirty || book.form.$submitted) }')
           label Title
-          input(type='text' name='title' class='form-control' ng-model='book.title' titles='titlesList' book-validator required)
+          input(type='text' name='title' class='form-control' ng-model='book.title' list='titlesList' unique required)
+          div(class='tooltip' ng-if='book.form.title.$dirty' ng-messages='book.form.title.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='unique') Title should be unique
         div(class='form-group col-md-12' ng-class='{"has-danger": book.form.author.$invalid && (book.form.author.$dirty || book.form.$submitted)}')
           label Author
-          select(name='author' class='form-control' ng-model='book.Author' ng-options='author.name for author in authorsList | orderBy: "name"' book-validator required)
+          select(name='author' class='form-control' ng-model='book.Author' ng-options='author.name for author in authorsList | orderBy: "name"' required)
             option(value='') Select Author
+          div(class='tooltip' ng-if='book.form.author.$dirty' ng-messages='book.form.author.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": book.form.genre.$invalid && (book.form.genre.$dirty || book.form.$submitted)}')
           label Genre
-          select(name='genre' class='form-control' ng-model='book.Genre' ng-options='genre.genre for genre in genresList | orderBy: "genre"' book-validator required)
+          select(name='genre' class='form-control' ng-model='book.Genre' ng-options='genre.genre for genre in genresList | orderBy: "genre"' required)
             option(value='') Select Genre
+          div(class='tooltip' ng-if='book.form.genre.$dirty' ng-messages='book.form.genre.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": book.form.published.$invalid && (book.form.published.$dirty || book.form.$submitted) }')
           label First Published
-          input(type='number' name='published' class='form-control' ng-model='book.first_published' min='1800' max='{{getCurrentYear()}}' book-validator required)
+          input(type='number' name='published' class='form-control' ng-model='book.first_published' min='1800' max='{{getCurrentYear()}}' required)
+          div(class='tooltip' ng-if='book.form.published.$dirty' ng-messages='book.form.published.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='min') The earliest year first published can be is 1800
+            div(class='tooltip-inner' ng-message='max') The latest year first published can be is this year
         div(class='form-group col-md-12' ng-class='{"has-danger": book.form.quantity.$invalid && (book.form.quantity.$dirty || book.form.$submitted) }')
           label Quantity
-          input(type='number' name='quantity' class='form-control' ng-model='book.quantity' min='0' book-validator required)
+          input(type='number' name='quantity' class='form-control' ng-model='book.quantity' min='0' required)
+          div(class='tooltip' ng-if='book.form.quantity.$dirty' ng-messages='book.form.quantity.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='min') Quantity can't be lower than 0
         div(class='text-center w-100')
           button(class='btn btn-primary mr-2' ng-click='createBook()') Submit
           button(class='btn btn-danger' ng-click='reset(book, "book")') Reset
@@ -63,10 +77,14 @@
       div(name='author.form' class='row align-items-end alert-gray' ng-form novalidate)
         div(class='form-group col-md-12' ng-class='{"has-danger": author.form.fname.$invalid && (author.form.fname.$dirty || author.form.$submitted) }')
           label First Name
-          input(type='text' name='fname' class='form-control' ng-model='author.fname' author-validator required)
+          input(type='text' name='fname' class='form-control' ng-model='author.fname' letters required)
+          div(class='tooltip' ng-if='author.form.fname.$dirty' ng-messages='author.form.fname.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": author.form.lname.$invalid && (author.form.lname.$dirty || author.form.$submitted) }')
           label Last Name
-          input(type='text' name='lname' class='form-control' ng-model='author.lname' author-validator required)
+          input(type='text' name='lname' class='form-control' ng-model='author.lname' letters required)
+          div(class='tooltip' ng-if='author.form.lname.$dirty' ng-messages='author.form.lname.$error')
+            div(ng-messages-include='error-messages')
         div(class='text-center w-100')
           button(class='btn btn-primary mr-2' ng-click='createAuthor()') Submit
           button(class='btn btn-danger' ng-click='reset(author, "author")') Reset
@@ -80,7 +98,10 @@
       din(name='genre.form' class='row align-items-end alert-gray' ng-form novalidate)
         div(class='form-group col-md-12' ng-class='{"has-danger": genre.form.genre.$invalid && (genre.form.genre.$dirty || genre.form.$submitted) }')
           label Genre
-          input(type='text' name='genre' class='form-control' ng-model='genre.genre' genres='genresList' genre-validator required)
+          input(type='text' name='genre' class='form-control' ng-model='genre.genre' list='genresList' unique required)
+          div(class='tooltip' ng-if='genre.form.genre.$dirty' ng-messages='genre.form.genre.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='unique') Genre should be unique
         div(class='text-center w-100')
           button(class='btn btn-primary mr-2' ng-click='createGenre()') Submit
           button(class='btn btn-danger' ng-click='reset(genre, "genre")') Reset
@@ -94,18 +115,30 @@
       div(name='loan.form' class='row align-items-end alert-gray animated fadeIn' ng-form novalidate)
         div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.book.$invalid && (loan.form.book.$dirty || loan.form.$submitted) }')
           label Book
-          select(name='book' class='form-control' ng-model='loan.Book' ng-options='book.title group by getAvailableStatus(book) disable when !book.available for book in titlesList | orderBy:"title"' loan-validator required)
+          select(name='book' class='form-control' ng-model='loan.Book' ng-options='book.title group by getAvailableStatus(book) disable when !book.available for book in titlesList | orderBy:"title"' required)
             option(value='') Select book
+          div(class='tooltip' ng-if='loan.form.book.$dirty' ng-messages='loan.form.book.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.patron.$invalid && (loan.form.patron.$dirty || loan.form.$submitted)}')
           label Patron
-          select(name='patron' class='form-control' ng-model='loan.Patron' ng-options='patron.full_name for patron in patronNamesList | orderBy:"full_name"' loan-validator required)
+          select(name='patron' class='form-control' ng-model='loan.Patron' ng-options='patron.full_name for patron in patronNamesList | orderBy:"full_name"' required)
             option(value='') Select patron
+          div(class='tooltip' ng-if='loan.form.patron.$dirty' ng-messages='loan.form.patron.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.loaned_on.$invalid}')
           label Loaned On
-          input(type='date' name='loaned_on' class='form-control form-control-panel' ng-model='loan.loaned_on' min='2000-01-01' max='{{datePostFormat(getTomorrow())}}' loan-validator required)
+          input(type='date' name='loaned_on' class='form-control form-control-panel' ng-model='loan.loaned_on' min='2000-01-01' max='{{datePostFormat(getTomorrow())}}' required)
+          div(class='tooltip' ng-messages='loan.form.loaned_on.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='min') The earliest date loaned can be is January 2000
+            div(class='tooltip-inner' ng-message='max') The latest date loaned can be is today's date
         div(class='form-group col-md-12' ng-class='{"has-danger": loan.form.return_by.$invalid}')
           label Return By
-          input(type='date' name='return_by' class='form-control form-control-panel' ng-model='loan.return_by' loan-validator required)
+          input(type='date' name='return_by' class='form-control form-control-panel' ng-model='loan.return_by' date-range required)
+          div(class='tooltip' ng-messages='loan.form.return_by.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='min') The earliest date return by can be is the loaned date
+            div(class='tooltip-inner' ng-message='max') The latest date return by can be is one year later from loaned date
         div(class='text-center w-100')
           button(class='btn btn-primary mr-2' ng-click='createLoan()') Submit
           button(class='btn btn-danger' ng-click='reset(loan, "loan")') Reset
@@ -119,19 +152,33 @@
       div(name='patron.form' class='row align-items-end alert-gray animated fadeIn' ng-form novalidate)
         div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.fname.$invalid && (patron.form.fname.$dirty || patron.form.$submitted) }')
           label First Name
-          input(type='text' name='fname' class='form-control' ng-model='patron.first_name' ng-change='patron.changed = true' patron-validator required)
+          input(type='text' name='fname' class='form-control' ng-model='patron.first_name' ng-change='patron.changed = true' letters required)
+          div(class='tooltip' ng-if='patron.form.fname.$dirty' ng-messages='patron.form.fname.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.lname.$invalid && (patron.form.lname.$dirty || patron.form.$submitted)}')
           label Last Name
-          input(type='text' name='lname' class='form-control' ng-model='patron.last_name' ng-change='patron.changed = true' patron-validator required)
+          input(type='text' name='lname' class='form-control' ng-model='patron.last_name' ng-change='patron.changed = true' letters required)
+          div(class='tooltip' ng-if='patron.form.lname.$dirty' ng-messages='patron.form.lname.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.address.$invalid && (patron.form.address.$dirty || patron.form.$submitted)}')
           label Address
-          input(type='text' name='address' class='form-control' ng-model='patron.address' ng-change='patron.changed = true' patron-validator required)
+          input(type='text' name='address' class='form-control' ng-model='patron.address' ng-change='patron.changed = true' required)
+          div(class='tooltip' ng-if='patron.form.address.$dirty' ng-messages='patron.form.address.$error')
+            div(ng-messages-include='error-messages')
         div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.email.$invalid && (patron.form.email.$dirty || patron.form.$submitted)}')
           label Email
-          input(type='email' name='email' class='form-control' ng-model='patron.email' ng-change='patron.changed = true' patron-validator required)
+          input(type='email' name='email' class='form-control' ng-model='patron.email' ng-change='patron.changed = true' required)
+          div(class='tooltip' ng-if='patron.form.email.$dirty' ng-messages='patron.form.email.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='email') Invalid email address
         div(class='form-group col-md-12' ng-class='{"has-danger": patron.form.zip.$invalid && (patron.form.zip.$dirty || patron.form.$submitted)}')
           label Zip Code
-          input(type='number' name='zip' class='form-control' ng-model='patron.zip_code' ng-change='patron.changed = true' min='10000' max='999999999999' ng-minlength='5' ng-maxlength='12' patron-validator required)
+          input(type='number' name='zip' class='form-control' ng-model='patron.zip_code' ng-change='patron.changed = true' min='00000' max='999999999999' ng-minlength='5' ng-maxlength='12' required)
+          div(class='tooltip' ng-if='patron.form.zip.$dirty' ng-messages='patron.form.zip.$error')
+            div(ng-messages-include='error-messages')
+            div(class='tooltip-inner' ng-message='min') Zip code can't be negative number
+            div(class='tooltip-inner' ng-message='minlength') Zip code length have be at list 5 digits
+            div(class='tooltip-inner' ng-message='maxlength') Zip code length can't be more than 12 digits
         div(class='text-center w-100')
           button(class='btn btn-primary mr-2' ng-click='createPatron()') Submit
           button(class='btn btn-danger' ng-click='reset(patron, "patron")') Reset
