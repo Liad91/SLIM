@@ -182,8 +182,8 @@ function Noty() {
   $.noty.defaults.theme = 'bootstrapTheme';
   $.noty.defaults.progressBar = true;
   $.noty.defaults.animation = {
-    open: 'animated slideInDown',
-    close: 'animated slideOutUp'
+    open: 'animated fadeInDown',
+    close: 'animated fadeOutUp'
   };
 
   /** Layout */
@@ -239,7 +239,7 @@ function Noty() {
       this.$closeButton.append('<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>');
       this.$closeButton.addClass('close');
 
-      this.$bar.addClass("list-group-item").css('padding', '0px').css('position', 'relative').css('border-radius', '0px');
+      this.$bar.addClass('list-group-item').css('padding', '0px').css('position', 'relative').css('border-radius', '0px');
 
       this.$progressBar.css({
         position: 'absolute',

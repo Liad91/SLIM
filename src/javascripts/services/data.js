@@ -11,7 +11,9 @@ function Data(Api) {
     constructor() {
       this.service = {};
 
-      /** Helpers methods */
+      /** 
+       * Helpers methods
+       */
 
       this.strDateToObj = data => {
         if (angular.isArray(data)) {
@@ -38,7 +40,7 @@ function Data(Api) {
         const categories = [this.service.titles, this.service.books];
 
         angular.forEach(categories, category => {
-          let data = category.data.find(data => data.id === id);
+          const data = category.data.find(data => data.id === id);
           /** Update loaned property in books */
           if (data.loaned) {
             data.loaned += 1;
@@ -51,7 +53,7 @@ function Data(Api) {
         const categories = [this.service.titles, this.service.books];
 
         angular.forEach(categories, category => {
-          let data = category.data.find(data => data.id === id);
+          const data = category.data.find(data => data.id === id);
           /** Update loaned property in books */
           if (data.loaned) {
             data.loaned -= 1;
@@ -175,14 +177,14 @@ function Data(Api) {
             }
           }
 
-          let data = this.service[category].data.find(data => data.id === resp.data.id);
+          const data = this.service[category].data.find(data => data.id === resp.data.id);
 
           angular.extend(data,resp.data);
               
 
           if (category === 'books' && adjust) {
             /** Update service.titles.data */
-            let data = this.service.titles.data.find(data => data.id === resp.data.id);
+            const data = this.service.titles.data.find(data => data.id === resp.data.id);
 
             const title = {
               id: resp.data.id,
@@ -204,7 +206,7 @@ function Data(Api) {
             const full_name = `${resp.data.first_name} ${resp.data.last_name}`
 
             /** Update service.patronNames.data */
-            let data = this.service.patronNames.data.find(data => data.id === id);
+            const data = this.service.patronNames.data.find(data => data.id === id);
 
             data.full_name = full_name;
 
@@ -226,13 +228,13 @@ function Data(Api) {
 
       return this.service[category].del(id)
         .then(resp => {
-          let index = this.service[category].data.findIndex(data => data.id === id);
+          const index = this.service[category].data.findIndex(data => data.id === id);
           
           this.service[category].data.splice(index, 1);
 
           if (category === 'books') {
             /** Update service.titles.data */
-            let index = this.service.titles.data.findIndex(data => data.id === id);
+            const index = this.service.titles.data.findIndex(data => data.id === id);
 
             this.service.titles.data.splice(index, 1);
             

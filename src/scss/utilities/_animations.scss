@@ -9,7 +9,7 @@
 }
 
 // Keyframes
-@-webkit-keyframes slideInDown {
+@-webkit-keyframes fadeInDown {
   0% {
     transform: translateY(-100%);
   }
@@ -18,7 +18,7 @@
   }
 }
 
-@keyframes slideInDown {
+@keyframes fadeInDown {
   0% {
     transform: translateY(-100%);
   }
@@ -27,7 +27,7 @@
   }
 }
 
-@-webkit-keyframes slideOutUp {
+@-webkit-keyframes fadeOutUp {
   0% {
     transform: translateY(0);
   }
@@ -36,7 +36,7 @@
   }
 }
 
-@keyframes slideOutUp {
+@keyframes fadeOutUp {
   0% {
     transform: translateY(0);
   }
@@ -46,14 +46,14 @@
 }
 
 // Class animation
-.slideInDown {
-  -webkit-animation-name: slideInDown;
-  animation-name: slideInDown;
+.fadeInDown {
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown;
 }
 
-.slideOutUp {
-  -webkit-animation-name: slideOutUp;
-  animation-name: slideOutUp;
+.fadeOutUp {
+  -webkit-animation-name: fadeOutUp;
+  animation-name: fadeOutUp;
 }
 
 

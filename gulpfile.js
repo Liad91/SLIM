@@ -5,6 +5,7 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const image = require('gulp-image');
 const uglify = require('gulp-uglify');
+const eslint = require('gulp-eslint');
 const gulpif = require('gulp-if');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
@@ -130,6 +131,9 @@ gulp.task('dist-app-js', () => {
     settings.js.app.directives,
     settings.js.app.filters
   ])
+    .pipe(eslint())
+    .pipe(eslint.format())
+		.pipe(eslint.failAfterError())
     .pipe(gulpif(settings.env === 'development', sourcemaps.init()))
     .pipe(babel({
       "presets": [
