@@ -34,6 +34,12 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
    * Set table filters
    */
 
+  vm.filterList = [
+    { name: 'All', icon: 'fa-list-ul'},
+    { name: 'Available', icon: 'fa-check-square' },
+    { name: 'Unavailable', icon: 'fa-minus-square' },
+  ];
+
   Table.prototype.adjust = function(force) {
     const page = force ? 0 : this.state.currentPage;
 
@@ -61,7 +67,7 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
 
   Table.prototype.switchFilter = function(filter) {
     if (this.hasModifiedItem) {
-      return Noty.displayNotes('Save your changes or cancel them before filtering the table', 'warning');
+      return Noty.main('Save your changes or cancel them before filtering the table', 'warning');
     }
 
     this.data = this.getData();
@@ -98,7 +104,7 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
     /** Display warning if there's open item and it was modified */
     if (this.hasModifiedItem) {
       this.state.searchQuery = prevQuery;
-      return Noty.displayNotes('Save your changes or cancel them before searching', 'warning');
+      return Noty.main('Save your changes or cancel them before searching', 'warning');
     }
 
     /** If search input gets shorter get the data list */
@@ -128,21 +134,10 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   /** 
    * Emit navigation data to MainCtrl
    */
-
-  const filterList = [
-    { name: 'All', icon: 'fa-list-ul'},
-    { name: 'Available', icon: 'fa-check-square' },
-    { name: 'Unavailable', icon: 'fa-minus-square' },
-  ];
  
   Broadcast.set('navigation', {
     title: 'Books',
-    category: 'books',
-    filterList,
-    switchFilter: vm.table.switchFilter.bind(vm.table),
-    search: vm.table.search.bind(vm.table),
-    changeable: vm.table.changeable.bind(vm.table),
-    adjust: vm.table.adjust.bind(vm.table)
+    search: vm.table.search.bind(vm.table)
   });
 
   /**

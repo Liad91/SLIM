@@ -1,0 +1,16 @@
+.dropdown.mr-2
+  a(href='' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+    i.fa.fa-cog
+  .dropdown-menu.dropdown-menu-right.popup
+    .dropdown-item.header font family
+    .dropdown-item.feature
+      span(class='font' ng-repeat='font in fonts' style='font-family: "{{font}}", sans-serif' ng-class='{"active": currentFont === font}' ng-click='changeFont(font)' ng-bind='font')
+    .dropdown-item.header primary color
+    .dropdown-item.feature
+      span(class='badge' ng-repeat='color in primaryColors' style='background-color: {{color}}' ng-class='{"active": currentPrimaryColor === color}' ng-click='changePrimaryColor(color)')
+    .dropdown-item.header sidebar color
+    .dropdown-item.feature
+      span(class='badge' ng-repeat='color in sidebarColors' style='background-color: {{color}}' ng-class='{"active": currentSidebarColor === color}' ng-click='changeSidebarColor(color)')
+    .dropdown-item.header sidebar images
+    .dropdown-item.feature
+      span(class='image' ng-repeat='image in images' style='background-image: url(./images/{{image}})' ng-class='{"active": currentSidebarImage === image}' ng-click='changeSidebarImage(image)')

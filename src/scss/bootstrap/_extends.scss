@@ -1,0 +1,71 @@
+// ==========================================================================
+// Extends
+// ==========================================================================
+
+.container {
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .display-4 {
+      margin-right: 1rem;
+      margin-bottom: 0;
+    }
+    img {
+      width: 170px;
+    }
+  }
+}
+
+.table.striped tbody:nth-of-type(odd) {
+  background-color: #f5f5f5;
+}
+.table tbody+tbody {
+  border: none;
+}
+
+.table th {
+  border-top: none;
+  font-weight: $headings-font-weight;
+  color: $gray-light;
+  a {
+    color: $gray-light;
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+  a.active {
+    color: $brand-primary;
+  }
+  i {
+    margin-left: 0.3rem;
+  }
+}
+
+.table td {
+  vertical-align: middle;
+  cursor: pointer;
+  .form-group {
+    margin-bottom: 0;
+    position: relative;
+  }
+}
+
+.form-control-sm {
+  padding: 0.2rem;
+  font-size: 0.79rem;
+  width: auto;
+}
+
+.table-active {
+  input {
+    width: 100%;
+  }
+  select {
+    width: 100%;
+  }
+}
+
+select.form-control:not([size]):not([multiple]) {
+  height: inherit;
+}

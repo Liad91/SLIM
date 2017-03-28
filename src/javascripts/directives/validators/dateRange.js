@@ -10,7 +10,7 @@ function dateRange($compile, Dates) {
     require: '^form',
     link(scope, element, attrs, ctrl) {
       const clearWatch = scope.$watch(() => ctrl.loaned_on.$modelValue, (newVal, oldVal) => {
-        if (newVal !== oldVal) {
+        if (newVal !== oldVal || !attrs.min) {
           /** Clear the previous watch */
           clearWatch();
 
@@ -39,9 +39,12 @@ function dateRange($compile, Dates) {
 
           /** Compile the return_by control */
           $compile(element)(scope);
-
-          /** Set the view value */
-          ctrl.return_by.$setViewValue(val);
+          
+          /** Only in options panel */
+          if (!ctrl.returned_on) {
+            /** Set the view value */
+            ctrl.return_by.$setViewValue(val);
+          }
         }
       });
     }

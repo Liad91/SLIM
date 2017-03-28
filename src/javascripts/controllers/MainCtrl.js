@@ -20,5 +20,6 @@ angular
 
     Broadcast.get($scope, 'navigation', (event, data) => {
       vm.nav = data;
+      vm.nav.category = vm.getUrl();
     });
   };

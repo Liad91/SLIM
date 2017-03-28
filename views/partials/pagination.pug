@@ -1,16 +1,33 @@
-nav.mt-3
-  ul.pagination.justify-content-center
-    li.page-item(ng-if='totalPages > length' ng-class='{"disabled": currentPage === 1}')
-      a(href='' ng-click='setPage({page: 1})' class='page-link')
-        i.fa.fa-angle-double-left
-    li.page-item(ng-class='{"disabled": currentPage === 1}')
-      a(href='' ng-click='setPage({page: currentPage - 1})' class='page-link')
-        i.fa.fa-angle-left
-    li.page-item(ng-repeat='page in nav' ng-class='{"active": currentPage === page}')
-      a(href='' ng-click='setPage({page: page})' class='page-link' ng-bind='page')
-    li.page-item(ng-class='{"disabled": currentPage === totalPages}')
-      a(href='' ng-click='setPage({page: currentPage + 1})' class='page-link')
-        i.fa.fa-angle-right
-    li.page-item(ng-if='totalPages > length' ng-class='{"disabled": currentPage === totalPages}')
-      a(href='' ng-click='setPage({page: totalPages})' class='page-link')
-        i.fa.fa-angle-double-right
+.table-pagination.my-3
+  .dropup
+    button(type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") {{state.itemsPerPage}}
+    .dropdown-menu
+      a(class='dropdown-item' ng-click='setItemsPerPage({num: 5})' ng-class='{"active": state.itemsPerPage === 5}') 5
+      a(class='dropdown-item' ng-click='setItemsPerPage({num: 10})' ng-class='{"active": state.itemsPerPage === 10}') 10
+      a(class='dropdown-item' ng-click='setItemsPerPage({num: 25})' ng-class='{"active": state.itemsPerPage === 25}') 25
+  span.ml-2 rows visible
+
+  .dropup.ml-3
+    button(type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") {{state.paginationLength}}
+    .dropdown-menu
+      a(class='dropdown-item' ng-click='setPaginationLength({num: 3})' ng-class='{"active": state.paginationLength === 3}') 3
+      a(class='dropdown-item' ng-click='setPaginationLength({num: 5})' ng-class='{"active": state.paginationLength === 5}') 5
+      a(class='dropdown-item' ng-click='setPaginationLength({num: 10})' ng-class='{"active": state.paginationLength === 10}') 10
+  span.ml-2 pagination max length
+
+  nav
+    ul.pagination.justify-content-center
+      li.page-item(ng-if='totalPages > state.paginationLength' ng-class='{"disabled": state.currentPage === 1}')
+        a(href='' ng-click='setPage({page: 1})' class='page-link')
+          i.fa.fa-angle-double-left
+      li.page-item(ng-class='{"disabled": state.currentPage === 1}')
+        a(href='' ng-click='setPage({page: state.currentPage - 1})' class='page-link')
+          i.fa.fa-angle-left
+      li.page-item(ng-repeat='page in nav' ng-class='{"active": state.currentPage === page}')
+        a(href='' ng-click='setPage({page: page})' class='page-link' ng-bind='page')
+      li.page-item(ng-class='{"disabled": state.currentPage === totalPages}')
+        a(href='' ng-click='setPage({page: state.currentPage + 1})' class='page-link')
+          i.fa.fa-angle-right
+      li.page-item(ng-if='totalPages > state.paginationLength' ng-class='{"disabled": state.currentPage === totalPages}')
+        a(href='' ng-click='setPage({page: totalPages})' class='page-link')
+          i.fa.fa-angle-double-right

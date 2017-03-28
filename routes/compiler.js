@@ -5,8 +5,8 @@ const path = require('path');
 const fs = require('fs');
 
 router.post('/css', (req, res, next) => {
-  const configFile = path.join(__dirname, '../src/scss/_configs.scss');
-  const data = req.body.colors.join(' ');
+  const configFile = path.join(__dirname, '../src/scss/settings/_user.scss');
+  const data = req.body.join(' ');
 
   gulp.task('compile', ['dist-css'], () => {
     res.end();

@@ -2,186 +2,172 @@ angular
   .module('slim')
   .controller('PatronsCtrl', PatronsCtrl);
 
-PatronsCtrl.$inject = ['$scope', 'Data', 'State', 'Broadcast' ,'Noty', 'Tooltip'];
+PatronsCtrl.$inject = ['$scope', '$filter', 'Data', 'Broadcast', 'State', 'Dates', 'Noty', 'Table'];
 
-function PatronsCtrl($scope, Data, State, Broadcast, Noty, Tooltip) {
+function PatronsCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) {
 
   const vm = this;
 
   /** 
-   * Get Table Data
+   * Get API tata
    */
 
-  const services = ['patrons'];
+  const categories = ['patrons'];
 
-  Data.watch(vm, services);
-
-  $scope.$on('$destroy', function() {
-    Data.unsubscribe(vm, services);
-    if (vm.patronInEditeMode) {
-      angular.forEach(vm.patronsList, function(patron) {
-        if (patron.editMode) {
-          patron.form.$setSubmitted();;
-        }
-      });
-    }
-  });
-
-  State.get(vm, 'loans');
+  Data.watch(vm, categories);
 
   /**
-   * Set Table Filters
-   */
-    
-  vm.filters = [
-    { name: 'All', icon: 'fa-th-large' },
-    { name: 'Overdue', icon: 'fa-clock-o' }
-  ];
-
-  vm.currentFilter = vm.filters[0].name;
-
-  vm.switchFilter = function(filter) {  
-    vm.currentFilter = filter;
-  };
-
-  /** 
-   * Emit header data to MainCtrl
+   * Get table state
    */
 
-  Broadcast.set('navigation', {
-    title: 'Patrons',
-    currentFilter: vm.currentFilter,
-    filters: vm.filters,
-    switchFilter: vm.switchFilter
-  });
+  State.get(vm, 'patrons');
   
-  /** 
-   * Table Functions
+  /**
+   * Get table methods
    */
 
-  /** Edit patron */
-  vm.edit = function(patron) {
-    // Make sure that the the function will run only if another patron is on edit mode
-    if (patron.patronInEditeMode) {
-      return;
+  vm.table = new Table('patrons', update);
+
+  vm.table.setState = vm.state;
+
+  /**
+   * Set table filters
+   */
+
+
+  Table.prototype.adjust = function(force) {
+    const page = force ? 0 : this.state.currentPage;
+
+    this.filteredData = this.data;
+
+    if (this.state.searchQuery) {
+      this.filteredData = $filter('filter')(this.filteredData, { $: this.state.searchQuery });
     }
-    vm.patronInEditeMode = true;
-    // make a copy of patron controls in patron.cache if the patron wasn't changed
-    if (!patron.changed) {
-      patron.cache = angular.extend({}, patron);
+    if (this.state.sortBy) {
+      this.filteredData = $filter('orderBy')(this.filteredData, this.state.sortBy, this.state.sortReverse);
     }
-    patron.editMode = true;
+
+    this.setPage(page);
   };
 
-  /** Exit from edit mode without saving the changes */
-  vm.cancel = function(patron) {
-    // Todo: dispose tooltips if exist
-    Tooltip.array(patron.form.tooltips, 'dispose');
-    // retrieve patron from patron.cache
-    angular.extend(patron, patron.cache);
-    // clear patron.cache object
-    patron.cache = {};
-    patron.changed = false;
-    // Exit from edit mode
-    patron.editMode = false;
-    // Exit patronInEditeMode
-    vm.patronInEditeMode = false;
-  };
+  Table.prototype.switchFilter = function(filter) {
+    if (this.hasModifiedItem) {
+      return Noty.main('Save your changes or cancel them before filtering the table', 'warning');
+    }
 
-  /** Save changes in database */
-  vm.save = function(patron) {
-    if (patron.form.$dirty || patron.changed) {
-      patron.form.$setSubmitted();
-      if (patron.form.$valid) {
-        const data = {
-          first_name: patron.first_name,
-          last_name: patron.last_name,
-          address: patron.address,
-          email: patron.email,
-          zip_code: patron.zip_code
-        };
+    this.filteredData = this.getData();
+    
+    /** Reset sort state */
+    if (this.state.sortBy) {
+      this.state.sortBy = '',
+      this.state.sortReverse = false;
+    }
 
-        // Set adjust to true if patron name changed (will cause to update of patronNames and loansList)
-        const adjust = patron.first_name !== patron.cache.first_name || patron.last_name !== patron.cache.last_name ? true : false;
-
-        Data.put(patron.id, data, 'patrons', adjust)
-          .then(function() {
-            patron.editMode = false;
-            // Exit patronInEditeMode
-            vm.patronInEditeMode = false;
-            Noty.displayNotes('Patron updated', 'success');
-            // clear patron.cache object
-            patron.cache = {};
-            patron.changed = false;
-          })
-          .catch(function() {
-            Noty.displayNotes('<strong>API error</strong><br>can\'t update the patron', 'error');
-          });
-      }
-      else {
-        // Show all tooltips
-        Tooltip.array(patron.form.tooltips, 'show');
-        Noty.displayNotes('Please check the form and try again', 'warning');
-      }
+    if (this.state.searchQuery) {
+      this.search(this.state.searchQuery)
     }
     else {
-      patron.editMode = false;
-      // Exit patronInEditeMode
-      vm.patronInEditeMode = false;
+      this.setPage(0);
     }
   };
 
-  /** Delete book from database */
-  vm.delete = function(patron, index) {
-    // Disable actions buttons
-    patron.deleteMode = true;
-    Noty.clearQueue();
-    const message = `Delete "${patron.first_name} ${patron.last_name}"?<br><small>(all associated loans to this patron will also be deleted)</small>`
-    function confirmed() {
-      Data.del(patron.id, 'patrons')
-        .then(function() {
-          // Dispose tooltips if exist
-          Tooltip.array(patron.form.tooltips, 'dispose');
-          // Exit patronInEditeMode
-          vm.patronInEditeMode = false;
-          Noty.displayNotes(`${patron.first_name} ${patron.last_name} was deleted`, 'success');
-        })
-        .catch(function() {
-          Noty.displayNotes('<strong>API error</strong><br>can\'t delete the patron', 'error');
-        });
+  Table.prototype.search = function(curQuery, prevQuery) {
+    /** Display warning if there's open item and it was modified */
+    if (this.hasModifiedItem) {
+      this.state.searchQuery = prevQuery;
+      return Noty.main('Save your changes or cancel them before searching', 'warning');
     }
-    function canceled() {
-      // Enable actions buttons
-      patron.deleteMode = false;
-      $scope.$apply();
+
+    /** If search input gets shorter get the data list */
+    if (prevQuery && prevQuery.length > curQuery.length) {
+      return this.switchFilter(this.state.currentFilter);
     }
-    Noty.displayDialogs(message, confirmed, canceled);
+
+    /** Reset sort state */
+    if (this.state.sortBy) {
+      this.state.sortBy = '',
+      this.state.sortReverse = false;
+    }
+
+    /** Search only if there's data */
+    if (this.filteredData.length > 0) {
+      this.filteredData = $filter('filter')(this.filteredData, { $: curQuery });
+      this.setPage(0);
+    }
   };
 
-  angular.forEach(vm.patronsList, function(patron, index) {
-    // Call edit method if patron is in edit mode
-    if (patron.editMode) {
-      vm.edit(patron);
-      // If missing data retrieve from patron.cache
+  /** 
+   * Emit navigation data to MainCtrl
+   */
+ 
+  Broadcast.set('navigation', {
+    title: 'Patrons',
+    search: vm.table.search.bind(vm.table)
+  });
+
+  /**
+   * Set table data from API
+   */
+
+  $scope.$watchCollection(() => vm.patrons, (list) => {
+    /** Check if the data from the API arrived */
+    if (list.length > 0 && list[0] !== 'loading' && list[0] !== 'timeout') {
+
+      vm.table.setData = vm.patrons;
+      
+      vm.table.adjust();
+    }
+  });
+
+  /**
+   * Restore item data on destroy
+   */
+
+  $scope.$on('$destroy', () => {
+    /** Restore missing data from patron.cache */
+    if (vm.table.hasModifiedItem) {
+      const patron = vm.table.displayedData[vm.state.editItemIndex];
+
       if (!patron.first_name) {
-        patron.first_name = patron.cache.first_name
+        patron.first_name = patron.cache.first_name;
       }
       if (!patron.last_name) {
-        patron.last_name = patron.cache.last_name
+        patron.last_name = patron.cache.last_name;
       }
       if (!patron.address) {
-        patron.address = patron.cache.address
+        patron.address = patron.cache.address;
       }
       if (!patron.email) {
-        patron.email = patron.cache.email
+        patron.email = patron.cache.email;
       }
-      if (!patron.zip_code) {
-        patron.zip_code = patron.cache.zip_code
+      if (!patron.first_name) {
+        patron.first_name = patron.cache.first_name;
       }
-      // Call delete method if patron is in delete mode
-      if (patron.deleteMode) {
-        vm.delete(patron, index);
+      if (!patron.zip) {
+        patron.zip = patron.cache.zip;
       }
     }
   });
+
+  /**
+   * Update book
+   * @param {object} patron
+   */
+
+  function update(patron) {
+    const updatedPatron = {}
+
+    updatedPatron.data = {
+      first_name: patron.first_name,
+      last_name: patron.last_name,
+      address: patron.address,
+      email: patron.email,
+      zip_code: patron.zip_code
+    };
+
+    // Set adjust to true if patron name changed (will cause to update of patronNames and loansList)
+    updatedPatron.adjust = patron.first_name !== patron.cache.first_name || patron.last_name !== patron.cache.last_name ? true : false;
+
+    return updatedPatron;
+  }
 };

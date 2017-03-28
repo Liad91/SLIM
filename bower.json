@@ -1,6 +1,6 @@
 {
-  "name": "library-manager",
-  "description": "",
+  "name": "slim",
+  "description": "single page library manager",
   "main": "",
   "authors": [
     "Liad Idan <liad.idan@gmail.com>"

@@ -43,15 +43,17 @@ const settings = new class Settings {
 
     this.js = {
       libs: {
-        angular: this.libraries.angular + 'angular.min.js',
-        ngCookies: this.libraries.ngCookies + 'angular-cookies.min.js',
-        ngRoute: this.libraries.ngRoute + 'angular-route.min.js',
-        ngAnimate: this.libraries.ngAnimate + 'angular-animate.min.js',
-        ngMessages: this.libraries.ngMessages + 'angular-messages.min.js',
+        angular: this.libraries.angular + 'angular.js',
+        ngCookies: this.libraries.ngCookies + 'angular-cookies.js',
+        ngRoute: this.libraries.ngRoute + 'angular-route.js',
+        ngAnimate: this.libraries.ngAnimate + 'angular-animate.js',
+        ngMessages: this.libraries.ngMessages + 'angular-messages.js',
         jquery: this.libraries.jquery + 'dist/jquery.min.js',
-        tether: this.libraries.tether + 'dist/js/tether.min.js',
-        bootstrap: this.libraries.bootstrap + 'dist/js/bootstrap.min.js',
-        noty: this.libraries.noty + 'js/noty/packaged/jquery.noty.packaged.min.js',
+        bootstrap: {
+          util: this.libraries.bootstrap + 'js/dist/util.js',
+          dropdown: this.libraries.bootstrap + 'js/dist/dropdown.js'
+        },
+        noty: this.libraries.noty + 'js/noty/jquery.noty.js',
       },
       app: {
         files: this.src + 'javascripts/**/*.js',
@@ -70,7 +72,7 @@ const settings = new class Settings {
       files: this.src + 'scss/**/*.scss',
       bootstrap: this.libraries.bootstrap + 'scss',
       fontAwesome: this.libraries.fontAwesome + 'scss',
-      main: this.src + 'scss/main.scss'
+      app: this.src + 'scss/app.scss'
     };
 
     this.fonts = {
@@ -89,7 +91,7 @@ gulp.task('dist-css', () => {
     config.outputStyle = 'compressed';
   }
 
-  return gulp.src(settings.styles.main)
+  return gulp.src(settings.styles.app)
     .pipe(gulpif(settings.env === 'development', sourcemaps.init()))
     .pipe(sass(config).on('error', sass.logError))
     .pipe(gulpif(settings.env === 'development', sourcemaps.write('.')))
@@ -105,12 +107,13 @@ gulp.task('dist-libs-js', () => {
     settings.js.libs.ngAnimate,
     settings.js.libs.ngMessages,
     settings.js.libs.jquery,
-    settings.js.libs.tether,
-    settings.js.libs.bootstrap,
+    settings.js.libs.bootstrap.util,
+    settings.js.libs.bootstrap.dropdown,
     settings.js.libs.noty
   ])
     .pipe(gulpif(settings.env === 'development', sourcemaps.init()))
     .pipe(concat('libs.min.js'))
+    .pipe(gulpif(settings.env === 'production', uglify()))
     .pipe(gulpif(settings.env === 'development', sourcemaps.write('.')))
     .pipe(gulp.dest(settings.dest.scripts));
 });
@@ -160,7 +163,8 @@ gulp.task('dist-icons', () => {
 gulp.task('dist-images', () => {
   return gulp.src(settings.src + 'images/*')
     .pipe(image({
-      svgo: false
+      svgo: false,
+      pngquant: false
     }))
     .pipe(gulp.dest(settings.dest.images));
 });

@@ -13,7 +13,7 @@ function Data(Api) {
 
       /** Helpers methods */
 
-      this.strDateToObj = function(data) {
+      this.strDateToObj = data => {
         if (angular.isArray(data)) {
           return data.map(loan => {
             loan.loaned_on = new Date(loan.loaned_on);
@@ -24,7 +24,6 @@ function Data(Api) {
             return loan;
           });
         }
-        // if it's object
         else if (angular.isObject(data)) {
           data.loaned_on = new Date(data.loaned_on);
           data.return_by = new Date(data.return_by);
@@ -35,7 +34,7 @@ function Data(Api) {
         }
       };
 
-      this.borrowBook = function(id) {
+      this.borrowBook = id => {
         const categories = [this.service.titles, this.service.books];
 
         angular.forEach(categories, category => {
@@ -48,7 +47,7 @@ function Data(Api) {
         });
       };
 
-      this.returnBook = function(id) {
+      this.returnBook = id => {
         const categories = [this.service.titles, this.service.books];
 
         angular.forEach(categories, category => {
@@ -89,7 +88,7 @@ function Data(Api) {
             if (category.name === 'loans') {
               resp.data = this.strDateToObj(resp.data);
             }
-            // Update the category.data array with the data from the database
+            /** Update the category.data array with the data from the database */
             angular.extend(categoryObject.data, resp.data);
           })
           .catch(() => {
@@ -126,7 +125,7 @@ function Data(Api) {
           }
           this.service[category].data.push(resp.data);
 
-          // Update service.titles.data
+          /** Update service.titles.data */
           if (category === 'books') {
             const title = {
               id: resp.data.id,
@@ -136,12 +135,12 @@ function Data(Api) {
             this.service.titles.data.push(title);
           }
 
-          // Update books availablity
+          /** Update books availablity */
           if (category === 'loans') {
             this.borrowBook(data.book_id);
           }
 
-          // Update service.patronNames
+          /** Update service.patronNames */
           if (category === 'patrons') {
             const patron = {
               id: resp.data.id,
@@ -166,6 +165,14 @@ function Data(Api) {
         .then(resp => {
           if (category === 'loans') {
             resp.data = this.strDateToObj(resp.data);
+
+            /** Update books availablity */
+            if (adjust.return) {
+              this.returnBook(adjust.return);
+            }
+            if (adjust.borrow) {
+              this.borrowBook(adjust.borrow);
+            }
           }
 
           let data = this.service[category].data.find(data => data.id === resp.data.id);
@@ -174,7 +181,7 @@ function Data(Api) {
               
 
           if (category === 'books' && adjust) {
-            // Update service.titles.data
+            /** Update service.titles.data */
             let data = this.service.titles.data.find(data => data.id === resp.data.id);
 
             const title = {
@@ -185,29 +192,23 @@ function Data(Api) {
 
             angular.extend(data, title);
 
-            // Update service.loans.data
+            /** Update service.loans.data */
             angular.forEach(this.service.loans.data, data => {
               if (data.Book.id === id) {
                 data.Book.title = resp.data.title;
               }
             });
           }
-              
-          // Update books availablity
-          if (category === 'loans' && adjust) {
-            this.returnBook(adjust);
-            this.borrowBook(resp.data.book_id);
-          }
 
           if (category === 'patrons' && adjust) {
             const full_name = `${resp.data.first_name} ${resp.data.last_name}`
 
-            // Update service.patronNames.data
+            /** Update service.patronNames.data */
             let data = this.service.patronNames.data.find(data => data.id === id);
 
             data.full_name = full_name;
 
-            // Update service.loans.data
+            /** Update service.loans.data */
             angular.forEach(this.service.loans.data, data => {
               if (data.Patron.id === id) {
                 data.Patron.full_name = full_name;
@@ -230,25 +231,25 @@ function Data(Api) {
           this.service[category].data.splice(index, 1);
 
           if (category === 'books') {
-            // Update service.titles.data
+            /** Update service.titles.data */
             let index = this.service.titles.data.findIndex(data => data.id === id);
 
             this.service.titles.data.splice(index, 1);
             
-            // Update service.loans.data
+            /** Update service.loans.data */
             this.service.loans.data = this.service.loans.data.filter(data => data.book_id !== id);
           }
 
-          // Update books availablity
+          /** Update books availablity */
           if (category === 'loans') {
             this.returnBook(resp.data.book_id);
           }
 
           if (category === 'patrons') {
-            // Update service.patronNames.data
+            /** Update service.patronNames.data */
             this.service.patronNames.data = this.service.patronNames.data.filter(data => data.id !== id);
 
-            // Update service.loans.data
+            /** Update service.loans.data */
             this.service.loans.data = this.service.loans.data.filter(data => data.Patron.id !== id);
           }
         });

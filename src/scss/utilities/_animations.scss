@@ -1,0 +1,78 @@
+// ==========================================================================
+// Animations
+// ==========================================================================
+
+.animated {
+  -webkit-animation-duration: $fast;
+  animation-duration: $fast;
+  animation-timing-function: ease;
+}
+
+// Keyframes
+@-webkit-keyframes slideInDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes slideOutUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes slideOutUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+// Class animation
+.slideInDown {
+  -webkit-animation-name: slideInDown;
+  animation-name: slideInDown;
+}
+
+.slideOutUp {
+  -webkit-animation-name: slideOutUp;
+  animation-name: slideOutUp;
+}
+
+
+// Angular animations
+.view {
+  @include fadeIn($fast);
+}
+
+.row {
+  @include fadeInDown($fast);
+  @include fadeOutUp($fast);
+}
+
+.panel.new {
+  @include slideOutRight($medium);
+  @include slideInUp($fast);
+}
+
+table tbody {
+  @include fadeIn($fast);
+  @include fadeOut($fast);
+}

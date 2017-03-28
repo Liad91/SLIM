@@ -41,6 +41,13 @@ module.exports = function(sequelize, DataTypes) {
       loaned: function() {
         return this.quantity - this.available;
       }
+    },
+    hooks: {
+      beforeBulkCreate: books => {
+        books.forEach(book =>{
+          book.available = book.quantity;
+        });
+      }
     }
   });
   return Book;

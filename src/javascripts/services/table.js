@@ -2,9 +2,9 @@ angular
   .module('slim')
   .service('Table', Table);
 
-Table.$inject = ['$filter', 'State', 'Data', 'Noty'];
+Table.$inject = ['$filter', 'Data', 'Noty'];
 
-function Table($filter, State, Data, Noty) {
+function Table($filter, Data, Noty) {
 
   class Service {
 
@@ -32,6 +32,32 @@ function Table($filter, State, Data, Noty) {
     set setState(state) {
       this.state = state;
     }
+
+    /**
+     * Set the state.itemsPerPage
+     * @param {number} num 
+     */
+
+    setItemsPerPage(num) {
+      if (this.hasModifiedItem) {
+        return Noty.main('Save your changes or cancel them before changing the table', 'warning');
+      }
+      this.state.itemsPerPage = num;
+      this.adjust(true);
+    }
+
+    /**
+     * Set the state.paginationLength
+     * @param {number} num 
+     */
+
+    setPaginationLength(num) {
+      if (this.hasModifiedItem) {
+        return Noty.main('Save your changes or cancel them before changing the table', 'warning');
+      }
+      this.state.paginationLength = num;
+      this.adjust(true);
+    }
     
     /**
      * Sort the table by column
@@ -41,7 +67,7 @@ function Table($filter, State, Data, Noty) {
     sortBy(column) {
       // Display warning if there's open item and it was modified
       if (this.hasModifiedItem) {
-        return Noty.displayNotes('Save your changes or cancel them before sorting the table', 'warning');
+        return Noty.main('Save your changes or cancel them before sorting the table', 'warning');
       }
 
       this.state.sortReverse = this.state.sortBy === column ? !this.state.sortReverse : false;
@@ -59,7 +85,7 @@ function Table($filter, State, Data, Noty) {
     setPage(page) {
       /** Display warning if there's open item and it was modified */
       if (this.hasModifiedItem) {
-        return Noty.displayNotes('Save your changes or cancel them before changing pages', 'warning');
+        return Noty.main('Save your changes or cancel them before changing pages', 'warning');
       }
 
       /** Close item open item */
@@ -121,7 +147,7 @@ function Table($filter, State, Data, Noty) {
 
     changeable() {
       if (this.hasModifiedItem) {
-        Noty.displayNotes('Save your changes or cancel them before changing the table settings', 'warning');
+        Noty.main('Save your changes or cancel them before changing the table settings', 'warning');
         return false;
       }
       return true;
@@ -137,8 +163,8 @@ function Table($filter, State, Data, Noty) {
         const newItem = this.update(item);
         Data.put(item.id, newItem.data, this.category, newItem.adjust)
           .then(() => {
-            item.editMode = false;
-            Noty.displayNotes('Item was updated successfully', 'success');
+            item.editing = false;
+            Noty.main('Item was updated successfully', 'success');
             /** Update state object */
             this.state.editItemIndex = '';
             /** clear item.cache object */
@@ -147,12 +173,12 @@ function Table($filter, State, Data, Noty) {
             this.adjust();
           })
           .catch(error => {
-            Noty.displayNotes('<strong>API error</strong><br>can\'t update the item', 'error');
+            Noty.main('<strong>API error</strong><br>can\'t update the item', 'error');
             throw new Error(error);
           });
       }
       else {
-        Noty.displayNotes('Check the form and try again', 'warning');
+        Noty.main('Check the form and try again', 'warning');
       }
     }
 
@@ -168,7 +194,7 @@ function Table($filter, State, Data, Noty) {
           const openedItem = this.displayedData[this.state.editItemIndex];
           /** If the open item changed return a warning message */
           if (openedItem.modified) {
-            return Noty.displayNotes('Save your changes or cancel them before editing other item', 'warning');
+            return Noty.main('Save your changes or cancel them before editing other item', 'warning');
           }
           /** Close open item */
           else {
@@ -182,7 +208,7 @@ function Table($filter, State, Data, Noty) {
       if (!item.modified) {
         item.cache = angular.extend({}, item);
       }
-      item.editMode = true;
+      item.editing = true;
     }
     
     /**
@@ -191,19 +217,26 @@ function Table($filter, State, Data, Noty) {
      */
 
     cancel(item) {
+      const note = Noty.getShownId();
+
+      /** Close the current note */
+      if (note && note !== 'panel') {
+        Noty.close(note);
+      }
+
       if (item.modified) {
         /** Retrieve item from item.cache */
         angular.extend(item, item.cache);
         item.modified = false;
+        
       }
-      if (item.deleteMode) {
-        Noty.closeAll();
-        item.deleteMode = false;
+      if (item.deleting) {
+        item.deleting = false;    
       }
       /** Clear item.cache object */
       item.cache = {};
       /** Exit from edit mode */
-      item.editMode = false;
+      item.editing = false;
       /** Update state object */
       this.state.editItemIndex = null;
     }
@@ -217,9 +250,7 @@ function Table($filter, State, Data, Noty) {
     delete(item, index) {
       const self = this;
 
-      /** Disable actions buttons */
-      item.deleteMode = true;
-      Noty.clearQueue();
+      item.deleting = true;
       const message = 'Are you sure you want to delete this item?<br><small>(all associated loans to this book will also be deleted)</small>';
       const confirmed = () => {
         Data.del(item.id, this.category)
@@ -228,18 +259,18 @@ function Table($filter, State, Data, Noty) {
               /** Update state object */
               this.state.editItemIndex = '';
             }
-            Noty.displayNotes('Item was deleted successfully', 'success');
+            Noty.main('Item was deleted successfully', 'success');
           })
           .catch(error => {
-            Noty.displayNotes('<strong>API error</strong><br>can\'t delete the item', 'error');
+            Noty.main('<strong>API error</strong><br>can\'t delete the item', 'error');
             throw new Error(error);
           });
       }
       const canceled = () => {
         /** Enable actions buttons */
-        item.deleteMode = false;
+        item.deleting = false;
       }
-      Noty.displayDialogs(message, confirmed, canceled);
+      Noty.dialog(message, confirmed, canceled);
     }
 
     /**

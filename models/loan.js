@@ -34,6 +34,9 @@ module.exports = function(sequelize, DataTypes) {
     },
     hooks: {
       afterCreate: borrowBook,
+      afterBulkCreate: loans => {
+        loans.forEach(loan => borrowBook(loan));
+      },
       afterDestroy: function(loan) {
         if (!loan.returned_on) {
           returnBook(loan);

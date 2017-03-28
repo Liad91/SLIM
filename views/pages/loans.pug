@@ -1,67 +1,119 @@
 .loader.w-100(ng-if='vm.loansList[0] === "loading"')
   img(src='images/loader.svg')
-div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loansList[0] === "timeout"')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loans.data[0] === "timeout"')
   .alert.alert-danger
     h4.alert-heading Gateway timeout
     p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
     p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
 
-.app-main(ng-show='vm.loansList[0] !== "loading" && vm.loansList[0] !== "timeout"')
-  .container-fluid
-    .card
-      .head
-        h3 Current Table: {{vm.currentFilter}} Loans
-        p.small.text-info You can filter the table with the filter icons in the top menu
+#notes
 
-      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.currentFilter === "All" && vm.loansList.length < 1')
+.app-main(ng-show='vm.loans.data[0] !== "loading" && vm.loans.data[0] !== "timeout"')
+  .container-fluid
+    .card.mt-4
+      .head
+        .left
+          h3 Current Table: {{vm.state.currentFilter}} Loans
+          p.small.text-info You can sort the table by clicking on the headers below
+        .right
+          .filters
+            div(class='filter-item' ng-repeat='filter in vm.filterList' ng-class='{active: filter.name === vm.state.currentFilter}')
+              a(href='' ng-click='vm.table.switchFilter(filter.name)')
+                i(class='fa {{filter.icon}}')
+                | {{filter.name}}
+
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && "All" && !vm.state.searchQuery')
         .alert.alert-info
           h4.alert-heading No Loans Found!
           p You can add new loan by using the options panel in the top menu.
           p.small.mb-0 However, if this message isn't eventually replaced, try to refrash the page.
 
-      .table-responsive(ng-show='vm.loansList.length > 0')
-        table(class='table striped mb-0' ng-class='{"table-hover": !vm.loanInEditeMode}')
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && vm.state.searchQuery')
+        .alert.alert-info
+          h4.alert-heading No Loans Found!
+          .alert-body.text-left
+            h5 Search Help:
+            ul
+              li Check your search for typos
+              li(ng-if='vm.state.currentFilter !== "All"')
+                a(href='' ng-click='vm.table.switchFilter("All")') Change filter
+              li Use fewer words
+              li Add spaces between words
+
+      .table-responsive(ng-show='vm.table.displayedData.length > 0')
+        table(class='table table-hover striped mb-0')
           thead
             tr
-              th No.
-              th Book
-              th Patron
-              th Loaned On
-              th Return By
-              th Returned On
+              th 
+                a(href='' ng-click='vm.table.sortBy("id")' ng-class='{"active": vm.state.sortBy === "id"}') ID
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "id" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "id" && vm.state.sortReverse}')
+              th 
+                a(href='' ng-click='vm.table.sortBy("Book.title")' ng-class='{"active": vm.state.sortBy === "Book.title"}') Book
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "Book.title" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "Book.title" && vm.state.sortReverse}')
+              th 
+                a(href='' ng-click='vm.table.sortBy("Patron.full_name")' ng-class='{"active": vm.state.sortBy === "Patron.full_name"}') Patron
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "Patron.full_name" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "Patron.full_name" && vm.state.sortReverse}')
+              th 
+                a(href='' ng-click='vm.table.sortBy("loaned_on")' ng-class='{"active": vm.state.sortBy === "loaned_on"}') Loaned On
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "loaned_on" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "loaned_on" && vm.state.sortReverse}')
+              th 
+                a(href='' ng-click='vm.table.sortBy("return_by")' ng-class='{"active": vm.state.sortBy === "return_by"}') Return By
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "return_by" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "return_by" && vm.state.sortReverse}')
+              th 
+                a(href='' ng-click='vm.table.sortBy("returned_on")' ng-class='{"active": vm.state.sortBy === "returned_on"}') Returned On
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "returned_on" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "returned_on" && vm.state.sortReverse}')
               th Actions
-          tbody(class='angular-animate' ng-repeat='loan in vm.loansList')
-            tr(ng-class='{"table-disabled": vm.loanInEditeMode}' ng-hide='loan.editMode')
-              td(ng-bind='loan.id')
-              td
+          tbody(ng-repeat='loan in vm.table.displayedData')
+            tr(ng-hide='loan.editing')
+              td(ng-click='vm.table.edit(loan, $index)')
+                span(ng-bind='loan.id')
+              td(ng-click='vm.table.edit(loan, $index)')
                 span(ng-bind='loan.Book.title')
-              td
+              td(ng-click='vm.table.edit(loan, $index)')
                 span(ng-bind='loan.Patron.full_name')
-              td
+              td(ng-click='vm.table.edit(loan, $index)')
                 span(ng-bind='vm.dateDisplayFormat(loan.loaned_on)')
-              td
+              td(ng-click='vm.table.edit(loan, $index)')
                 span(ng-bind='vm.dateDisplayFormat(loan.return_by)')
-              td
+              td(ng-click='vm.table.edit(loan, $index)')
                 span(ng-bind='vm.dateDisplayFormat(loan.returned_on)')
                 span(ng-if='!loan.returned_on') Not returned yet
-              td
+              td(ng-click='vm.table.edit(loan, $index)')
                 button(class='btn btn-sm btn-primary btn-block' ng-click='vm.edit(loan)' ng-disabled='vm.loanInEditeMode') Edit
 
-            tr(name='loan.form' class='table-info' ng-if='loan.editMode' ng-form)
+            tr(name='loan.form' class='table-active' ng-if='loan.editing' ng-form)
               td(ng-bind='loan.id')
               td
-                select(name='book' class='form-control form-control-sm' ng-model='loan.Book' ng-change='loan.changed = true' ng-options='book.title group by vm.getAvailableStatus(book) disable when !book.available for book in vm.titlesList | orderBy: "title" track by book.id' loan-validator)
+                select(name='book' class='form-control form-control-sm' ng-model='loan.Book' ng-change='loan.modified = true' ng-options='book.title group by vm.getAvailableStatus(book) disable when !book.available for book in vm.titles | orderBy: "title" track by book.id')
               td
-                select(name='patron' class='form-control form-control-sm' ng-model='loan.Patron' ng-change='loan.changed = true' ng-options='patron.full_name for patron in vm.patronNamesList | orderBy: "full_name" track by patron.id' loan-validator)
-              td(ng-class='{"has-danger": loan.form.loaned_on.$invalid && (loan.form.loaned_on.$dirty || loan.form.$submitted)}')
-                input(type='date' name='loaned_on' class='form-control form-control-sm' ng-model='loan.loaned_on' ng-change='loan.changed = true' min='2000-01-01' max='{{vm.datePostFormat(getTomorrow())}}' loan-validator required)
-              td(ng-class='{"has-danger": loan.form.return_by.$invalid && (loan.form.return_by.$dirty || loan.form.$submitted)}')
-                input(type='date' name='return_by' class='form-control form-control-sm' ng-model='loan.return_by' ng-change='loan.changed = true' loan-validator required)
+                select(name='patron' class='form-control form-control-sm' ng-model='loan.Patron' ng-change='loan.modified = true' ng-options='patron.full_name for patron in vm.patronNames | orderBy: "full_name" track by patron.id')
+              td(ng-class='{"has-danger": loan.form.loaned_on.$invalid}')
+                .form-group
+                  input(type='date' name='loaned_on' class='form-control form-control-sm' ng-model='loan.loaned_on' ng-model-options='{allowInvalid: true}' ng-change='loan.modified = true' min='2000-01-01' max='{{vm.datePostFormat(getTomorrow())}}' required)
+                  div(class='tooltip' ng-messages='loan.form.loaned_on.$error')
+                    div(ng-messages-include='error-messages')
+                    div(class='tooltip-inner' ng-message='min') The earliest date loaned can be is January 2000
+                    div(class='tooltip-inner' ng-message='max') The latest date loaned can be is today's date
+              td(ng-class='{"has-danger": loan.form.return_by.$invalid}')
+                .form-group
+                  input(type='date' name='return_by' class='form-control form-control-sm' ng-model='loan.return_by' ng-model-options='{allowInvalid: true}' ng-change='loan.modified = true' date-range required)
+                  div(class='tooltip' ng-messages='loan.form.return_by.$error')
+                    div(ng-messages-include='error-messages')
+                    div(class='tooltip-inner' ng-message='min') The earliest date return by can be is one day after loaned date
+                    div(class='tooltip-inner' ng-message='max') The latest date return by can be is one year later from loaned date
               td
-                input(type='date' name='returned_on' class='form-control form-control-sm' ng-model='loan.returned_on' ng-change='loan.changed = true' ng-show='loan.returned_on' ng-min='loan.loaned_on' max='{{vm.datePostFormat(getTomorrow())}}')
-                button(class='btn btn-sm btn-success' ng-if='!loan.returned_on' ng-click='return(loan);') Returned
+                input(type='date' name='returned_on' class='form-control form-control-sm' ng-model='loan.returned_on' ng-change='loan.modified = true' ng-show='loan.returned_on' ng-min='loan.loaned_on' max='{{vm.datePostFormat(getTomorrow())}}')
+                button(class='btn btn-sm btn-success' ng-if='!loan.returned_on' ng-click='vm.table.return(loan);') Returned
               td
-                button(class='btn btn-sm btn-primary btn-block' ng-if='loan.changed' ng-click='vm.save(loan)') Save
-                button(class='btn btn-sm btn-primary btn-block' ng-if='!loan.changed' ng-click='vm.cancel(loan)') Close
-                button(class='btn btn-sm btn-warning btn-block' ng-if='loan.changed' ng-click='vm.cancel(loan)') Cancel
-                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.delete(loan, $index)') Delete
+                button(class='btn btn-sm btn-primary btn-block' ng-if='loan.modified' ng-click='vm.table.save(loan)') Save
+                button(class='btn btn-sm btn-primary btn-block' ng-if='!loan.modified' ng-click='vm.table.cancel(loan)') Close
+                button(class='btn btn-sm btn-warning btn-block' ng-if='loan.modified' ng-click='vm.table.cancel(loan)') Cancel
+                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.table.delete(loan, $index)') Delete
+
+        pagination(state='vm.state' nav='vm.table.nav' set-items-per-page='vm.table.setItemsPerPage(num)' set-pagination-length='vm.table.setPaginationLength(num)' set-page='vm.table.setPage(page)' total-pages='vm.table.totalPages')

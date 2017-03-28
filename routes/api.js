@@ -192,28 +192,28 @@ router.put('/loans/:id', (req, res, next) => {
     })
     .then(loan => {
       newLoan = Object.assign({}, loan.dataValues);
-      // check if loan book was returned
+      /** check if loan book was returned */
       if (!oldLoan.returned_on && newLoan.returned_on) {
-        // return the book
-        loan.returnBook();
+        /** return the book */
+        loan.returnBook(newLoan);
       }
-      // check if loan doesn't returned and the book was changed
+      /** check if loan doesn't returned and the book was changed */
       else if (!oldLoan.returned_on && !newLoan.returned_on) {
         if (oldLoan.book_id !== newLoan.book_id) {
-          // return the old book and borrow the new one
+          /** return the old book and borrow the new one */
           loan.returnBook(oldLoan);
           loan.borrowBook(newLoan);
         }
       }
-      // check if The book was borrowed
+      /** check if The book was borrowed */
       else if (oldLoan.returned_on && !newLoan.returned_on) {
-        // borrow the new book
+        /** borrow the new book */
         loan.borrowBook(newLoan);
       }
 
       res.send(loan);
     })
-    .catch(error => {       
+    .catch(error => {
       res.sendStatus(403);        
     });
 });

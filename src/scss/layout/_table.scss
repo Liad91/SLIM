@@ -1,0 +1,55 @@
+// ==========================================================================
+// Table
+// ==========================================================================
+
+.filters {
+  display: flex;
+  .filter-item {
+    margin-right: 0.3rem;
+    &.active {
+      border-color: $brand-primary-light;
+      a {
+        color: $brand-primary-light;
+      }
+    }
+    &:hover {
+      border-color: $brand-primary-light;
+      a {
+        color: $brand-primary-light;
+      }
+    }
+    a {
+      font-size: $font-size-sm;
+      padding: 0.2rem 0.5rem;
+      color: $oslo-gray;
+      border: 1px solid;
+      border-radius: $border-radius-lg;
+    }
+    a i {
+      padding-right: 0.2rem;
+    }
+  }
+}
+
+.table-pagination {
+  display: flex;
+  padding: 0 1rem;
+  align-items: center;
+  span {
+    font-size: $font-size-sm;
+  }
+  nav {
+    margin-left: auto;
+  }
+  ul.pagination {
+    margin-bottom: 0;
+  }
+}
+
+// table loader
+.loader {
+  @extend .flex-center;
+  img {
+    width: 70px;
+  }
+}

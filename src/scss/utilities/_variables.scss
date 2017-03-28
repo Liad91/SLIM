@@ -1,0 +1,23 @@
+// ==========================================================================
+// Global Variables
+// ==========================================================================
+
+// Animations durations
+$slow: 1s;
+$medium: 0.35s;
+$fast: 0.25s;
+
+// borders
+$panel-border: 1px solid  #e7e7e7;
+$border-radius-xl: 0.6rem;
+
+// colors
+$oslo-gray: lighten($gray-light, 15%);
+$brand-primary-light: lighten($brand-primary, 15%);
+
+// transition
+$transition-linear:  all 0.15s linear;
+$transition-shrink:  all 0.35s ease-in-out;
+
+// font-size
+$font-size-xl: 1.5rem;

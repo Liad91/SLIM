@@ -1,0 +1,290 @@
+// ==========================================================================
+// Custom
+// ==========================================================================
+
+.form-control-panel {
+  padding: 0.35rem 0.75rem;
+}
+
+.tooltip-inner {
+  background-color: #f2dede;
+  border: 1px solid #ebcccc;
+  color: #a94442;
+}
+
+.tooltip.bs-tether-element-attached-bottom .tooltip-inner::before,
+.tooltip.tooltip-top .tooltip-inner::before {
+  border-top-color: #ebcccc;
+}
+
+.card {
+  box-shadow: 0 1px 6px 0 rgba($black, 0.15);
+  -webkit-box-shadow: 0 1px 6px 0 rgba($black, 0.15);
+  .head {
+    display: flex;
+    padding: 1rem 1rem 0;
+    & .left {
+      display: block;
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 1.1;
+        margin-bottom: 0;
+      }
+    }
+    & .right {
+      display: block;
+    }
+  }
+}
+
+.dropdown,
+.dropup {
+  .dropdown-menu {
+    transition: $transition-linear;
+    margin-top: 1.4rem;
+    visibility: hidden;
+    opacity: 0;
+    display: block;
+  }
+  &.show .dropdown-menu {
+    opacity: 1;
+    margin-top: 0;
+    visibility: visible;
+  }
+}
+
+.dropdown {
+  &.show {
+    i {
+      color: $brand-primary;
+    }
+  }
+  .dropdown-menu.dropdown-menu-right {
+    margin-right: -1rem;
+  }
+}
+
+.dropup {
+  .dropdown-menu {
+    margin-top: auto;
+    margin-bottom: -1.4rem;
+  }
+  button {
+    font-size: $font-size-sm;
+    padding: 0.2rem 0.5rem;
+    color: $oslo-gray;
+    border: 1px solid;
+    border-radius: $border-radius-lg;
+    background: $white;
+    &:hover {
+      border-color: $brand-primary-light;
+      color: $brand-primary-light;
+    }
+  }
+  &.show {
+    button {
+      border-color: $brand-primary-light;
+      color: $brand-primary-light;
+    }
+  }
+}
+
+.dropdown.show .dropdown-menu {
+  margin-top: 0.5rem;
+  &:before {
+    border-bottom: 0.7rem solid rgba($black, 0.15);
+    border-left: 0.7rem solid transparent;
+    border-right: 0.7rem solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0.75rem;
+    top: -0.7rem;
+  }
+  &:after {
+    border-bottom: 0.7rem solid $white;
+    border-left: 0.7rem solid transparent;
+    border-right: 0.7rem solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0.75rem;
+    top: -0.6rem;
+  }
+  &.dropdown-menu-right {
+    &:before {
+      left: auto;
+      right: 0.75rem;
+    }
+    &:after {
+      left: auto;
+      right: 0.75rem;
+    }
+  }
+}
+
+.dropup.show .dropdown-menu {
+  margin-top: auto;
+  margin-bottom: 0.3rem;
+  &:before {
+    border-bottom: none;
+    border-top: 0.7rem solid rgba($black, 0.15);
+    border-left: 0.7rem solid transparent;
+    border-right: 0.7rem solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0.75rem;
+    top: auto;
+    bottom: -0.7rem;
+  }
+  &:after {
+    border-bottom: none;
+    border-top: 0.7rem solid $white;
+    border-left: 0.7rem solid transparent;
+    border-right: 0.7rem solid transparent;
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0.75rem;
+    top: auto;
+    bottom: -0.6rem;
+  }
+}
+
+.dropdown-menu {
+  margin: 0;
+  padding: 0;
+  border-radius: $border-radius-xl;
+  z-index: 9999;
+  box-shadow: 1px 2px 3px rgba($black, 0.125);
+  & .dropdown-item {
+    padding: 0.25rem 1rem;
+  }
+  & .dropdown-item:first-child {
+    margin-top: 0.3rem;
+    border-top-left-radius: $border-radius-sm;
+    border-top-right-radius: $border-radius-sm;
+  }
+  & .dropdown-item:last-child {
+    margin-bottom: 0.3rem;
+    border-bottom-left-radius: $border-radius-sm;
+    border-bottom-right-radius: $border-radius-sm;
+  }
+  .dropdown-item {
+    &.active {
+      background-color: lighten($brand-primary, 30%);
+    }
+    &:active {
+      background-color: $gray-lightest;
+    }
+  }
+  &.popup {
+    padding: 0 0.6rem;
+    & .dropdown-item {
+      &.header {
+        height: 2rem;
+        line-height: 2;
+        font-size: $font-size-xs;
+        font-weight: $headings-font-weight;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      &.feature {
+        text-align: center;
+        padding: 0.25rem 0 0.5rem;
+        border-bottom: $panel-border;
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+      &:hover,
+      &:active {
+        background-color: $white;
+        color: $gray-dark;
+      }
+    }
+    span {
+      display: inline-block;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      transition: $transition-linear;
+      &.active,
+      &:hover {
+        transform: scale(1.2);
+        box-shadow: 1px 2px 3px rgba($black , 0.2);
+      }
+    }
+    .badge {
+      border-radius: 50%;
+      height: 1.1rem;
+      position: relative;
+      width: 1.1rem;
+    }
+    .image {
+      border-radius: $border-radius-lg;
+      height: 100px;
+      width: 50px;
+      background-size: cover;
+      background-position: center center;
+      &.active,
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+    .font {
+      &.active,
+      &:hover {
+        color: $brand-primary;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+    span:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// pagination
+.pagination {
+  .page-link {
+    transition: none;
+    padding: 0.3rem 0.75rem;
+  }
+}
+
+// tooltip
+.tooltip {
+  opacity: 1;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin-bottom: 0.3rem;
+}
+
+.tooltip-inner {
+  margin: 0 auto;
+}
+
+.tooltip-inner::before {
+  border-top-color: #ebcccc;
+  bottom: 0;
+  left: 50%;
+  margin-left: -0.3rem;
+  margin-bottom: -0.25rem;
+  content: "";
+  border-width: 0.3rem 0.3rem 0;
+}
+
+// list-group-item
+.list-group-item {
+  transition: $transition-base;
+}
+
+@include list-group-item(warning, $state-warning-bg, $state-warning-text);
+@include list-group-item(success, $state-success-bg, $state-success-text);
+@include list-group-item(danger, $state-danger-bg, $state-danger-text);
+@include list-group-item(info, $state-info-bg, $state-info-text);

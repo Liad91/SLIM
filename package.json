@@ -1,5 +1,6 @@
 {
   "name": "slim",
+  "description": "single page library manager",
   "version": "0.5.0",
   "private": true,
   "scripts": {

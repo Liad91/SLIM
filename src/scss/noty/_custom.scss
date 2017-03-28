@@ -1,0 +1,40 @@
+// ==========================================================================
+// Custom
+// ==========================================================================
+
+#notes {
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+#side-notes {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  right: 0;
+  left: 0;
+  z-index: 9999;
+  overflow: hidden;
+  .list-group-item {
+    min-height: 74px;
+  }
+}
+
+.noty_bar {
+  width: 100%;
+}
+
+.noty_buttons {
+  text-align: center;
+  padding-bottom: 0.55rem;
+  .btn-danger {
+    margin-left: 0.3rem;
+  }
+}
+
+.reset-progressbar {
+  transition: none !important;
+  width: 100% !important;
+}

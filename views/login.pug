@@ -2,7 +2,9 @@ extends layout
 
 block content
   .container.text-center.my-5
-    h1.display-4 Welcome to Slim
+    .header
+      h1.display-4 Welcome to
+      img(src='images/logo.png')
     p.lead Single Page Library Manager
 
   .container
@@ -15,7 +17,7 @@ block content
             | #{error}
 
         div(class='card text-center mx-auto' style='width: 20rem;')
-          .card-block(style='background: #09c;')
+          .card-block(style='background-color: #0099cb;')
             img(class='w-75' src='/images/user.jpg' alt='Card image cap')
           .card-block
             form(method='post' action='/login')

@@ -1,0 +1,103 @@
+// ==========================================================================
+// Panels
+// ==========================================================================
+
+.panels {
+  position: relative;
+  width: 0;
+  transition: $transition-base;
+  border-left: $panel-border;
+  overflow: hidden;
+  &.open {
+    width: 400px;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  &.new {
+    .body {
+      position: relative;
+      background-color: $white;
+      padding: 2rem 1rem 0;
+      .form-group .tooltip {
+        margin-bottom: -1.7rem;
+      }
+    }
+  }
+  .header {
+    @extend .panel-tab;
+    background-color: lighten($brand-primary, 20%);
+    color: $white;
+    font-size: $font-size-base;
+    span {
+      font-weight: $headings-font-weight;
+    }
+    a {
+      margin-left: auto;
+      color: $white;
+      &:hover {
+        transform: scale(1.5);
+      }
+    }
+  }
+  .body {
+    @extend .scrollbar;
+    height: calc(100vh - 55px - 72px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .tab {
+      @extend .panel-tab;
+      transition: $transition-base;
+      border-top: $panel-border;
+      color: $gray-light;
+      opacity: 0.6;
+      &:hover {
+        opacity: 1;
+        i + i {
+          transform: rotate(-90deg);
+        }
+      }
+      & > i {
+        font-size: $font-size-lg;
+      }
+      & > i:first-child {
+        margin-right: 0.7rem;
+      }
+      i + i {
+        transition: $transition-base;
+        margin-left: auto;
+      }
+      &:nth-child(1) {
+        i:first-child {
+          color: $blue;
+        }
+      }
+      &:nth-child(2) {
+        i:first-child {
+          color: $orange;
+        }
+      }
+      &:nth-child(3) {
+        i:first-child {
+          color: $green;
+        }
+      }
+      &:nth-child(4) {
+        i:first-child {
+          color: $red;
+        }
+      }
+      &:nth-child(5) {
+        i:first-child {
+          color: $purple;
+        }
+      }
+    }
+  }
+}

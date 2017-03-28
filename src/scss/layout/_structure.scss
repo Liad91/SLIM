@@ -1,0 +1,43 @@
+// ==========================================================================
+// Structure
+// ==========================================================================
+
+.app-wrapper {
+  position: absolute;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+
+.app-wrapper .app-container {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.app-main-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.view {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.app-main {
+  @extend .scrollbar;
+  background-color: #f5f5f5;
+  flex: 1;
+  height: calc(100vh - 55px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-bottom: 1rem;
+}

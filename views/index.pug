@@ -6,9 +6,10 @@ block content
       img(src='images/render.svg')
   div(class='app-wrapper' ng-app='slim')
     div(class='app-container' ng-controller='MainCtrl as vm')
-      .sidebar
+      .sidebar(ng-class='{"mini": miniSidebar}')
+        .sidebar-background
         .header
-          h5 Slim
+          .logo
         ul.nav.flex-column
           li(ng-class='{active: vm.getUrl() === "books"}')
             a(href='/books')
@@ -27,7 +28,7 @@ block content
               i.fa.fa-sign-out
               span Logout
       .app-main-container
-        navigation(title='vm.nav.title' panel='panel' category='vm.nav.category' filter-list='vm.nav.filterList' switch-filter='vm.nav.switchFilter(filter)' changeable='vm.nav.changeable()' search='vm.nav.search(curQuery, prevQuery)' adjust='vm.nav.adjust(force)')
+        navigation(mini-sidebar='miniSidebar' title='vm.nav.title' panel='panel' category='vm.nav.category' search='vm.nav.search(curQuery, prevQuery)')
         .app-content
           script(type='text/ng-template' id='error-messages')
             div(class='tooltip-inner' ng-message='required') This field is required

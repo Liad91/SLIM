@@ -1,27 +1,15 @@
 header.page-header
-  .container-fluid
-    .app-content.pt-2
-      .left
-        .title 
+  .container-fluid.h-100
+    .app-content.h-100
+      .left.align-self-center
+        a(ng-click='miniSidebar = !miniSidebar' ng-class='{active: miniSidebar}')
+          i.fa(ng-class='{"fa-compress": !miniSidebar, "fa-expand": miniSidebar}')
+        .title
           h5.mb-0 {{title}}
-        .filters.small
-          span Filter By:
-          div(class='filter-item' ng-repeat='filter in filterList' ng-class='{active: filter.name === state.currentFilter}')
-            a(href='' ng-click='switchFilter({filter: filter.name})')
-              i(class='fa {{filter.icon}}')
-              | {{filter.name}}
-
-          span Items per page:
-          select(ng-model='itemsPerPage' ng-change='setItemsPerPage()')
-            option(ng-repeat='num in [5, 10, 25]' value='{{num}}') {{num}}
-
-          span Pagination Length:
-          select(ng-model='paginationLength' ng-change='setPaginationLength()')
-            option(ng-repeat='num in [3, 5, 10]' value='{{num}}') {{num}}
       .right
         .menu
-          configs
-          a(href='' ng-click='panel = !panel' ng-class='{active: panel}')
+          settings
+          a(ng-click='panel = !panel' ng-class='{active: panel}')
             i.fa.fa-bars
         form(class='form-inline query')
           .input-group

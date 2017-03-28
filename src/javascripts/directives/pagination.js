@@ -7,10 +7,11 @@ function pagination() {
     resstrict: 'E',
     templateUrl: 'templates/partials/pagination',
     scope: {
+      state: '=',
       nav: '=',
       totalPages: '=',
-      length: '=',
-      currentPage: '=',
+      setItemsPerPage: '&',
+      setPaginationLength: '&',
       setPage: '&'
     },
     replace: true

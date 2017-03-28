@@ -1,67 +1,121 @@
-.loader.w-100(ng-if='vm.booksList[0] === "loading"')
+.loader.w-100(ng-if='vm.patrons.data[0] === "loading"')
   img(src='images/loader.svg')
-div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.booksList[0] === "timeout"')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.patrons.data[0] === "timeout"')
   .alert.alert-danger
     h4.alert-heading Gateway timeout
     p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
     p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
 
-.app-main(ng-show='vm.patronsList[0] !== "loading" && vm.patronsList[0] !== "timeout"')
-  .container-fluid
-    .card
-      .head
-        h3 Current Table: {{vm.currentFilter}} Patrons
-        p.small.text-info You can filter the table with the filter icons in the top menu
+#notes
 
-      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.currentFilter === "All" && vm.patronsList.length < 1')
+.app-main(ng-show='vm.patrons.data[0] !== "loading" && vm.patrons.data[0] !== "timeout"')
+  .container-fluid
+    .card.mt-4
+      .head
+        .left
+          h3 Current Table: All Patrons
+          p.small.text-info You can sort the table by clicking on the headers below
+
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && !vm.state.searchQuery')
         .alert.alert-info
           h4.alert-heading No Patrons Found!
           p You can add new patron by using the options panel in the top menu.
           p.small.mb-0 However, if this message isn't eventually replaced, try to refrash the page.
 
-      .table-responsive(ng-show='vm.patronsList.length > 0')
-        table(class='table striped mb-0' ng-class='{"table-hover": !vm.patronInEditeMode}')
+      div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.table.displayedData.length < 1 && vm.state.searchQuery')
+        .alert.alert-info
+          h4.alert-heading No Patrons Found!
+          .alert-body.text-left
+            h5 Search Help:
+            ul
+              li Check your search for typos
+              li(ng-if='vm.state.currentFilter !== "All"')
+                a(href='' ng-click='vm.table.switchFilter("All")') Change filter
+              li Use fewer words
+              li Add spaces between words
+
+      .table-responsive(ng-show='vm.table.displayedData.length > 0')
+        table(class='table table-hover striped mb-0')
           thead
             tr
-              th First Name
-              th Last Name
-              th Address
-              th Email
-              th Library ID
-              th ZIP Code
+              th
+                a(href='' ng-click='vm.table.sortBy("first_name")' ng-class='{"active": vm.state.sortBy === "first_name"}') First Name
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "first_name" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "first_name" && vm.state.sortReverse}')
+              th
+                a(href='' ng-click='vm.table.sortBy("last_name")' ng-class='{"active": vm.state.sortBy === "last_name"}') Last Name
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "last_name" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "last_name" && vm.state.sortReverse}')
+              th
+                a(href='' ng-click='vm.table.sortBy("address")' ng-class='{"active": vm.state.sortBy === "address"}') Address
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "address" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "address" && vm.state.sortReverse}')
+              th
+                a(href='' ng-click='vm.table.sortBy("email")' ng-class='{"active": vm.state.sortBy === "email"}') Email
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "email" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "email" && vm.state.sortReverse}')
+              th
+                a(href='' ng-click='vm.table.sortBy("library_id")' ng-class='{"active": vm.state.sortBy === "library_id"}') Library ID
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "library_id" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "library_id" && vm.state.sortReverse}')
+              th
+                a(href='' ng-click='vm.table.sortBy("zip_code")' ng-class='{"active": vm.state.sortBy === "zip_code"}') ZIP Code
+                small
+                  i.fa(ng-class='{"fa-sort-desc": vm.state.sortBy === "zip_code" && !vm.state.sortReverse, "fa-sort-asc": vm.state.sortBy === "zip_code" && vm.state.sortReverse}')
               th Actions
-          tbody(class='angular-animate' ng-repeat='patron in vm.patronsList')
-            tr(ng-class='{"table-disabled": vm.patronInEditeMode}' ng-hide='patron.editMode')
-              td
+          tbody(ng-repeat='patron in vm.table.displayedData')
+            tr(ng-hide='patron.editing')
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.first_name')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.last_name')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.address')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.email')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.library_id')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 span(ng-bind='patron.zip_code')
-              td
+              td(ng-click='vm.table.edit(patron, $index)')
                 button(class='btn btn-sm btn-primary btn-block' ng-click='vm.edit(patron)' ng-disabled='vm.patronInEditeMode') Edit
 
-            tr(name='patron.form' class='table-info' ng-if='patron.editMode' ng-form)
-              td(ng-class='{"has-danger": patron.form.fname.$invalid && (patron.form.fname.$dirty || patron.form.$submitted)}')
-                input(type='text' name='fname' class='form-control form-control-sm' ng-model='patron.first_name' ng-change='patron.changed = true' patron-validator required)
-              td(ng-class='{"has-danger": patron.form.lname.$invalid && (patron.form.lname.$dirty || patron.form.$submitted)}')
-                input(type='text' name='lname' class='form-control form-control-sm' ng-model='patron.last_name' ng-change='patron.changed = true' patron-validator required)
-              td(ng-class='{"has-danger": patron.form.address.$invalid && (patron.form.address.$dirty || patron.form.$submitted)}')
-                input(type='text' name='address' class='form-control form-control-sm' ng-model='patron.address' ng-change='patron.changed = true' patron-validator required)
-              td(ng-class='{"has-danger": patron.form.email.$invalid && (patron.form.email.$dirty || patron.form.$submitted)}')
-                input(type='email' name='email' class='form-control form-control-sm' ng-model='patron.email' ng-change='patron.changed = true' patron-validator required)
+            tr(name='patron.form' class='table-active' ng-if='patron.editing' ng-form)
+              td(ng-class='{"has-danger": patron.form.fname.$invalid}')
+                .form-group
+                  input(type='text' name='fname' class='form-control form-control-sm' ng-model='patron.first_name' ng-change='patron.modified = true' letters required)
+                  div(class='tooltip' ng-messages='patron.form.fname.$error')
+                    div(ng-messages-include='error-messages')
+              td(ng-class='{"has-danger": patron.form.lname.$invalid}')
+                .form-group
+                  input(type='text' name='lname' class='form-control form-control-sm' ng-model='patron.last_name' ng-change='patron.modified = true' letters required)
+                  div(class='tooltip' ng-messages='patron.form.lname.$error')
+                    div(ng-messages-include='error-messages')
+              td(ng-class='{"has-danger": patron.form.address.$invalid}')
+                .form-group
+                  input(type='text' name='address' class='form-control form-control-sm' ng-model='patron.address' ng-change='patron.modified = true' required)
+                  div(class='tooltip' ng-messages='patron.form.address.$error')
+                    div(ng-messages-include='error-messages')
+              td(ng-class='{"has-danger": patron.form.email.$invalid}')
+                .form-group
+                  input(type='email' name='email' class='form-control form-control-sm' ng-model='patron.email' ng-change='patron.modified = true' required)
+                  div(class='tooltip' ng-messages='patron.form.email.$error')
+                    div(ng-messages-include='error-messages')
+                    div(class='tooltip-inner' ng-message='email') Invalid email address
               td
                 span(ng-bind='patron.library_id')
-              td(ng-class='{"has-danger": patron.form.zip.$invalid && (patron.form.zip.$dirty || patron.form.$submitted)}')
-                input(type='number' name='zip' class='form-control form-control-sm' ng-model='patron.zip_code' ng-change='patron.changed = true' min='10000' max='999999999999' ng-minlength='5' ng-maxlength='12' patron-validator required)
+              td(ng-class='{"has-danger": patron.form.zip.$invalid}')
+                .form-group
+                  input(type='number' name='zip' class='form-control form-control-sm' ng-model='patron.zip_code' ng-change='patron.modified = true' min='00000' max='999999999999' ng-minlength='5' ng-maxlength='12' required)
+                  div(class='tooltip' ng-messages='patron.form.zip.$error')
+                    div(ng-messages-include='error-messages')
+                    div(class='tooltip-inner' ng-message='min') Zip code can't be negative number
+                    div(class='tooltip-inner' ng-message='minlength') Zip code length have be at list 5 digits
+                    div(class='tooltip-inner' ng-message='maxlength') Zip code length can't be more than 12 digits
               td
-                button(class='btn btn-sm btn-primary btn-block' ng-if='patron.changed' ng-click='vm.save(patron)') Save
-                button(class='btn btn-sm btn-primary btn-block' ng-if='!patron.changed' ng-click='vm.cancel(patron)') Close
-                button(class='btn btn-sm btn-warning btn-block' ng-if='patron.changed' ng-click='vm.cancel(patron)') Cancel
-                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.delete(patron, $index)') Delete
+                button(class='btn btn-sm btn-primary btn-block' ng-if='patron.modified' ng-click='vm.table.save(patron)') Save
+                button(class='btn btn-sm btn-primary btn-block' ng-if='!patron.modified' ng-click='vm.table.cancel(patron)') Close
+                button(class='btn btn-sm btn-warning btn-block' ng-if='patron.modified' ng-click='vm.table.cancel(patron)') Cancel
+                button(class='btn btn-sm btn-danger btn-block' ng-click='vm.table.delete(patron, $index)') Delete
+
+        pagination(state='vm.state' nav='vm.table.nav' set-items-per-page='vm.table.setItemsPerPage(num)' set-pagination-length='vm.table.setPaginationLength(num)' set-page='vm.table.setPage(page)' total-pages='vm.table.totalPages')

@@ -19,6 +19,13 @@ function panels(Data, Dates, Noty) {
     link(scope, element, attrs) {
 
       /**
+       * Dates handlers
+       */
+      
+      scope.datePostFormat = Dates.datePostFormat;
+      scope.getTomorrow = Dates.getTomorrow;
+
+      /**
        * Initial Data
        */
 
@@ -66,9 +73,8 @@ function panels(Data, Dates, Noty) {
       /**
        * Forms Methods
        */
-
+      
       scope.reset = (object, name) => {
-        // reset obj properties
         angular.extend(object, controls[name]);
         object.form.$setPristine();
       };
@@ -161,8 +167,8 @@ function panels(Data, Dates, Noty) {
           const data = {
             book_id: loan.Book.id,
             patron_id: loan.Patron.id,
-            loaned_on: Dates.datePostFormat(loan.loaned_on),
-            return_by: Dates.datePostFormat(loan.return_by)
+            loaned_on: scope.datePostFormat(loan.loaned_on),
+            return_by: scope.datePostFormat(loan.return_by)
           };
           Data.post(data, 'loans')
             .then(() => {
@@ -203,7 +209,7 @@ function panels(Data, Dates, Noty) {
         }
       };
 
-      // Group books by availablity
+      /** Group books by availablity */
       scope.getAvailableStatus = book => book.available > 0 ? 'Available' : 'Unavailable';
 
       /**
@@ -211,22 +217,22 @@ function panels(Data, Dates, Noty) {
        */
 
       function success(categoty, name) {
-        // display success message
-        Noty.displayNotes(`New ${name} was created`, 'success', 'topRight');
-        // close the panel
+        /** Display success message */
+        Noty.panel(`New ${name} was created`, 'success');
+        /** Close the panel */
         scope.close(categoty);
-        // reset the form
+        /** Reset the form */
         scope.reset(categoty, name);
       }
 
       function error(name) {
-        // display error message
-        Noty.displayNotes(`<strong>API error</strong><br> can\'t create new ${name}`, 'error', 'topRight');
+        /** Display error message */
+        Noty.panel(`<strong>API error</strong><br> can\'t create new ${name}`, 'error');
       }
 
       function invalidForm(category) {
-        // display warning message
-        Noty.displayNotes('Please check the form and try again', 'warning', 'topRight');
+        /** Display warning message */
+        Noty.panel('Please check the form and try again', 'warning');
       }
     }
   }
