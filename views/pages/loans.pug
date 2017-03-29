@@ -1,16 +1,18 @@
-.loader.w-100(ng-if='vm.loansList[0] === "loading"')
+.loader.w-100(ng-if='vm.loans[0] === "loading"')
   img(src='images/loader.svg')
-div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loans.data[0] === "timeout"')
+div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loans[0] === "timeout"')
   .alert.alert-danger
     h4.alert-heading Gateway timeout
     p The Slim server is up, but the request couldn’t be serviced due to some failure. Try again later.
-    p.small.mb-0 However, if this message isn't eventually replaced, please <a href='https://www.github.com/Liad91'>contact us</a>.
+    p.small.mb-0 However, if this message isn't eventually replaced, please 
+      a(href='https://www.github.com/Liad91') contact me
+      | .
 
 #notes
 
-.app-main(ng-show='vm.loans.data[0] !== "loading" && vm.loans.data[0] !== "timeout"')
+.app-main(ng-show='vm.loans[0] !== "loading" && vm.loans[0] !== "timeout"')
   .container-fluid
-    .card.mt-4
+    .card.my-4
       .head
         .left
           h3 Current Table: {{vm.state.currentFilter}} Loans
@@ -117,3 +119,9 @@ div(class='mt-3 mx-auto w-50 text-center' ng-if='vm.loans.data[0] === "timeout"'
                 button(class='btn btn-sm btn-danger btn-block' ng-click='vm.table.delete(loan, $index)') Delete
 
         pagination(state='vm.state' nav='vm.table.nav' set-items-per-page='vm.table.setItemsPerPage(num)' set-pagination-length='vm.table.setPaginationLength(num)' set-page='vm.table.setPage(page)' total-pages='vm.table.totalPages')
+
+  .copyright
+    span © 2017, made with
+    i.fa.fa-heart
+    span by 
+    a(href='https://www.github.com/Liad91') Liad Idan

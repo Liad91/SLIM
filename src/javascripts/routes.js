@@ -9,7 +9,7 @@ function routes($routeProvider, $locationProvider) {
   clearServices.$inject = ['Noty'];
 
   function clearCookie($cookies, $window) {
-    $cookies.remove('libraryManager');
+    $cookies.remove('slimAdministrator');
     $window.location.reload()
   }
 

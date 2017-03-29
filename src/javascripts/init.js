@@ -5,6 +5,7 @@ angular
 init.$inject = ['Api', 'Data'];
 
 function init(Api, Data) {
+
   Data.set([
     {
       name: 'books',

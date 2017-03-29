@@ -34,10 +34,14 @@
 
 .app-main {
   @extend .scrollbar;
+  display: flex;
+  flex-direction: column;
   background-color: #f5f5f5;
   flex: 1;
   height: calc(100vh - 55px);
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-bottom: 1rem;
+  & .container-fluid {
+    margin: 0;
+  }
 }

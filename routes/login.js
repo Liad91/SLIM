@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
     .then(user => {
       if (user !== null) {
         /** Set cookie */
-        res.cookie('libraryManager', 'adminIsLoggedIn');
+        res.cookie('slimAdministrator', req.body.username);
         /** Reload the page */
         res.redirect('/books');
       }

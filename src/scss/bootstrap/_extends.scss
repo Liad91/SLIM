@@ -42,12 +42,19 @@
   }
 }
 
-.table td {
-  vertical-align: middle;
-  cursor: pointer;
-  .form-group {
-    margin-bottom: 0;
-    position: relative;
+.table {
+  td {
+    vertical-align: middle;
+    cursor: pointer;
+    .form-group {
+      margin-bottom: 0;
+      position: relative;
+    }
+  }
+  & .table-active {
+    td {
+      cursor: default;
+    }
   }
 }
 

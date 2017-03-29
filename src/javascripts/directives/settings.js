@@ -14,7 +14,7 @@ function settings($http) {
       const $overlay = $('.overlay');
 
       scope.currentPrimaryColor = $('.btn-primary').css('background-color').replace(/ /g,'');
-      scope.primaryColors = ['rgb(53,142,215)', 'rgb(83,187,179)', 'rgb(131,140,199)', 'rgb(189,198,207)', 'rgb(125,200,85)'];
+      scope.primaryColors = ['rgb(123,129,169)', 'rgb(53,142,215)', 'rgb(83,187,179)', 'rgb(99,198,114)', 'rgb(96,125,139)'];
       scope.changePrimaryColor = color => {
         if (color !== scope.currentPrimaryColor) {
           scope.currentPrimaryColor = color;
@@ -57,7 +57,7 @@ function settings($http) {
         data.push(`$brand-primary: ${scope.currentPrimaryColor};`);
 
         /** Set bootstrap success color to blue (if currentPrimaryColor is green) */
-        if (scope.currentPrimaryColor === scope.primaryColors[4]) {
+        if (scope.currentPrimaryColor === scope.primaryColors[3]) {
           data.push('$brand-success: #358ed7;');
         }
 

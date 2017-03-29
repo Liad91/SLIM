@@ -32,7 +32,7 @@
   }
   .header {
     @extend .panel-tab;
-    background-color: lighten($brand-primary, 20%);
+    background-color: $brand-primary;
     color: $white;
     font-size: $font-size-base;
     span {
@@ -56,12 +56,17 @@
       transition: $transition-base;
       border-top: $panel-border;
       color: $gray-light;
-      opacity: 0.6;
       &:hover {
-        opacity: 1;
+        padding: 2rem 1.5rem;
         i + i {
           transform: rotate(-90deg);
         }
+      }
+      &:first-child {
+        border-top: 0;
+      }
+      &:last-child {
+        border-bottom: $panel-border;
       }
       & > i {
         font-size: $font-size-lg;

@@ -10,19 +10,22 @@ function dateRange($compile, Dates) {
     require: '^form',
     link(scope, element, attrs, ctrl) {
       const clearWatch = scope.$watch(() => ctrl.loaned_on.$modelValue, (newVal, oldVal) => {
-        if (newVal !== oldVal || !attrs.min) {
+        /** Remove validators if loaned_on value is not a date object */
+        if (!angular.isDate(newVal) && oldVal) {
           /** Clear the previous watch */
           clearWatch();
 
-          /** Remove validators if loaned_on value is not a date object */
-          if (!angular.isDate(newVal)) {
-            /** Remove the return_by 'min' and 'max' attr */
-            element.removeAttr('max');
-            element.removeAttr('min');
+          /** Remove the return_by 'min' and 'max' attr */
+          element.removeAttr('max');
+          element.removeAttr('min');
 
-            /** Compile the element */
-            return $compile(element)(scope);
-          }
+          /** Compile the element */
+          return $compile(element)(scope);
+        }
+
+        else if (newVal !== oldVal || !attrs.min && oldVal) {
+          /** Clear the previous watch */
+          clearWatch();
 
           const max = Dates.datePostFormat(Dates.getNextYear(newVal));
           const min = Dates.datePostFormat(Dates.getTomorrow(newVal));
@@ -40,7 +43,7 @@ function dateRange($compile, Dates) {
           /** Compile the return_by control */
           $compile(element)(scope);
           
-          /** Only in options panel */
+          /** Only in create panel */
           if (!ctrl.returned_on) {
             /** Set the view value */
             ctrl.return_by.$setViewValue(val);

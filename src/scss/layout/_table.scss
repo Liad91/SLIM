@@ -48,8 +48,22 @@
 
 // table loader
 .loader {
+  height: calc(100vh - 55px);
   @extend .flex-center;
   img {
     width: 70px;
+  }
+}
+
+// copyright
+.copyright {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 90%;
+  text-align: center;
+  margin-top: auto;
+  padding: 1rem 0;
+  i {
+    color: $red;
+    margin: 0 0.2rem;
   }
 }

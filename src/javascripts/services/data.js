@@ -86,7 +86,7 @@ function Data(Api) {
         }
 
         category.get
-          .then(resp => {
+          .then(resp => {            
             if (category.name === 'loans') {
               resp.data = this.strDateToObj(resp.data);
             }
@@ -94,7 +94,7 @@ function Data(Api) {
             angular.extend(categoryObject.data, resp.data);
           })
           .catch(() => {
-            categoryObject.data = ['timeout'];
+            angular.extend(categoryObject.data, ['timeout']);
           });
       });
     }

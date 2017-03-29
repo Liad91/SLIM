@@ -2,18 +2,11 @@
 // Sidebar
 // ==========================================================================
 
-.sidebar,
-.sidebar.mini:hover {
-  transition: $transition-shrink;
+.sidebar {
   position: relative;
+  transition: $transition-shrink;
   width: 260px;
-  background: $sidebar-background-color;
-  background: -moz-linear-gradient(top, $sidebar-background-color 0%, rgba(52, 52, 52, 0.2) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $sidebar-background-color), color-stop(100%, rgba(52, 52, 52, 0.2)));
-  background: -webkit-linear-gradient(top, $sidebar-background-color 0%, rgba(52, 52, 52, 0.2) 100%);
-  background: -o-linear-gradient(top, $sidebar-background-color 0%, rgba(52, 52, 52, 0.2) 100%);
-  background: -ms-linear-gradient(top, $sidebar-background-color 0%, rgba(52, 52, 52, 0.2) 100%);
-  background: linear-gradient(to bottom, $sidebar-background-color 0%, rgba(52, 52, 52, 0.2) 100%);
+  @include gradient-y($sidebar-background-color, rgba($gray-dark, 0.2));
   background-size: 150% 150%;
   border-color: $sidebar-background-color;
   &.mini {
@@ -116,4 +109,30 @@
     background-size: cover;
     background-position: center center;
   }
+  @media(max-width: 1253px) {
+    & {
+      width: 80px;
+      .header {
+        padding: 0;
+        .logo {
+          background-size: 80%;
+        }
+      }
+      ul {
+        li a {
+          text-align: center;
+          padding: 0;
+          margin: 0.5rem 0.8rem;
+          i {
+            font-size: $font-size-lg;
+            padding: 0.5rem;
+            width: 100%;
+          }
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+  } 
 }

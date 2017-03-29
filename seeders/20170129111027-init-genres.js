@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.bulkCreate('Genres', [
+    return queryInterface.bulkInsert('Genres', [
       {genre: 'Fantasy'},
       {genre: 'Non Fiction'},
       {genre: 'Horror'},

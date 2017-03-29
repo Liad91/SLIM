@@ -33,7 +33,7 @@ app.use('/compile', compiler);
 
 /** GET * and forward to login page or angular application (check by cookie) */
 app.get('*', function (req, res) {
-  if (req.cookies.libraryManager) {
+  if (req.cookies.slimAdministrator) {
     res.render('index');
   }
   else {

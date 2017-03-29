@@ -71,6 +71,7 @@
     margin-bottom: -1.4rem;
   }
   button {
+    transition: $btn-transition;
     font-size: $font-size-sm;
     padding: 0.2rem 0.5rem;
     color: $oslo-gray;

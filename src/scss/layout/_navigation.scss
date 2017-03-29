@@ -32,6 +32,11 @@ header.page-header {
         background: lighten($brand-primary, 20%);
         color: $white;
       }
+      @media(max-width: 1253px) {
+        & {
+          display: none;
+        }
+      }
     }
   }
   .right {
