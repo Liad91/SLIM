@@ -1,7 +1,6 @@
 # SLIM
 
 ![slim-screenshot](https://cloud.githubusercontent.com/assets/19666213/24549426/e10aeb44-1621-11e7-9465-428bc42e8292.png)
-![slim-screenshot-2](https://cloud.githubusercontent.com/assets/19666213/24549483/1e181d5e-1622-11e7-95ea-92e1695c25fa.png)
 
 SLIM is a single page library management system for small libraries AngularJS powered with a modern, clean design based on the popular Bootstrap framework v4.
 
