@@ -4,7 +4,7 @@
 
     // errors
     "no-empty": 2,
-    //"no-console": 2,
+    "no-console": 2,
     "no-cond-assign": 2,
     "no-func-assign": 2,
     "no-unused-labels": 2,
