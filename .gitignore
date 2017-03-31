@@ -12,5 +12,8 @@ bower_components
 # Distribution directory
 dist
 
+# Database directory
+api
+
 # Debug log from npm
 npm-debug.log
