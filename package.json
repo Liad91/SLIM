@@ -32,5 +32,13 @@
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.4.0",
     "gulp-uglify": "^2.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liad91/SLIM.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Liad91/SLIM/issues"
+  },
+  "homepage": "https://github.com/Liad91/SLIM#readme"
 }
