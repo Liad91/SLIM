@@ -1,7 +1,5 @@
 ## SLIM
 
-![screen](https://cloud.githubusercontent.com/assets/19666213/20004269/f4b4cde2-a293-11e6-8254-0688d7fd96ce.jpg)
-
 SLIM is a single page library management system for small libraries with fresh and clean design.
 
 ### Features
