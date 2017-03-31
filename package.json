@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "win_build": "set node_env=production&& gulp"
+    "win_build_production": "set node_env=production&& gulp"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
