@@ -77,6 +77,7 @@ function panels(Data, Dates, Noty) {
       scope.reset = (object, name) => {
         angular.extend(object, controls[name]);
         object.form.$setPristine();
+        Noty.close('panel');
       };
 
       scope.close = cat => {

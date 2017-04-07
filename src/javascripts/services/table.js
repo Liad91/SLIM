@@ -16,7 +16,7 @@ function Table($filter, Data, Noty) {
 
     /**
      * Set the table data
-     * @param {array} data 
+     * @param {object[]} data 
      */
 
     set setData(data) {
@@ -29,8 +29,16 @@ function Table($filter, Data, Noty) {
      * @param {array} state 
      */
 
-    set setState(state) {
-      this.state = state;
+    set state(state) {
+      this._state = state;
+    }
+
+    /**
+     * Set delete message
+     * @param {string} message
+     */
+    set deleteMessage(message) {
+      this._deleteMessage = message;
     }
 
     /**
@@ -42,7 +50,7 @@ function Table($filter, Data, Noty) {
       if (this.hasModifiedItem) {
         return Noty.main('Save your changes or cancel them before changing the table', 'warning');
       }
-      this.state.itemsPerPage = num;
+      this._state.itemsPerPage = num;
       this.adjust(true);
     }
 
@@ -55,7 +63,7 @@ function Table($filter, Data, Noty) {
       if (this.hasModifiedItem) {
         return Noty.main('Save your changes or cancel them before changing the table', 'warning');
       }
-      this.state.paginationLength = num;
+      this._state.paginationLength = num;
       this.adjust(true);
     }
     
@@ -70,10 +78,10 @@ function Table($filter, Data, Noty) {
         return Noty.main('Save your changes or cancel them before sorting the table', 'warning');
       }
 
-      this.state.sortReverse = this.state.sortBy === column ? !this.state.sortReverse : false;
-      this.state.sortBy = column;
+      this._state.sortReverse = this._state.sortBy === column ? !this._state.sortReverse : false;
+      this._state.sortBy = column;
 
-      this.filteredData = $filter('orderBy')(this.filteredData, column, this.state.sortReverse);
+      this.filteredData = $filter('orderBy')(this.filteredData, column, this._state.sortReverse);
       this.setPage(1);
     }
 
@@ -89,14 +97,14 @@ function Table($filter, Data, Noty) {
       }
 
       /** Close item open item */
-      if (page !== this.state.currentPage && angular.isNumber(this.state.editItemIndex) && this.displayedData) {
-        this.cancel(this.displayedData[this.state.editItemIndex]);
+      if (page !== this._state.currentPage && angular.isNumber(this._state.editItemIndex) && this.displayedData) {
+        this.cancel(this.displayedData[this._state.editItemIndex]);
       }
 
-      const length = this.state.paginationLength;
-      this.totalPages = Math.ceil(this.filteredData.length / this.state.itemsPerPage);
+      const length = this._state.paginationLength;
+      this.totalPages = Math.ceil(this.filteredData.length / this._state.itemsPerPage);
 
-      if(this.nav.length < 1 || this.state.currentPage !== page) {
+      if(this.nav.length < 1 || this._state.currentPage !== page) {
         const nav = [];
 
         let start;
@@ -136,10 +144,10 @@ function Table($filter, Data, Noty) {
         page = this.totalPages;
       }
 
-      this.state.currentPage = page;
+      this._state.currentPage = page;
 
-      const start = (page - 1) * this.state.itemsPerPage;
-      const end = start + this.state.itemsPerPage;
+      const start = (page - 1) * this._state.itemsPerPage;
+      const end = start + this._state.itemsPerPage;
 
       /** The paging and filtered array of all the books */
       this.displayedData = this.filteredData.slice(start, end);
@@ -166,7 +174,7 @@ function Table($filter, Data, Noty) {
             item.editing = false;
             Noty.main('Item was updated successfully', 'success');
             /** Update state object */
-            this.state.editItemIndex = '';
+            this._state.editItemIndex = '';
             /** clear item.cache object */
             item.cache = {};
             item.modified = false;
@@ -189,9 +197,9 @@ function Table($filter, Data, Noty) {
      */
 
     edit(item, index) {
-      if (angular.isNumber(this.state.editItemIndex)) {
-        if (this.state.editItemIndex !== index) {
-          const openedItem = this.displayedData[this.state.editItemIndex];
+      if (angular.isNumber(this._state.editItemIndex)) {
+        if (this._state.editItemIndex !== index) {
+          const openedItem = this.displayedData[this._state.editItemIndex];
           /** If the open item changed return a warning message */
           if (openedItem.modified) {
             return Noty.main('Save your changes or cancel them before editing other item', 'warning');
@@ -203,7 +211,7 @@ function Table($filter, Data, Noty) {
         }
       }
       /** Update state object */
-      this.state.editItemIndex = index;
+      this._state.editItemIndex = index;
       /** Make a copy of the item controls in item.cache if the item wasn't changed */
       if (!item.modified) {
         item.cache = angular.extend({}, item);
@@ -238,7 +246,7 @@ function Table($filter, Data, Noty) {
       /** Exit from edit mode */
       item.editing = false;
       /** Update state object */
-      this.state.editItemIndex = null;
+      this._state.editItemIndex = null;
     }
 
     /**
@@ -251,13 +259,12 @@ function Table($filter, Data, Noty) {
       const self = this;
 
       item.deleting = true;
-      const message = 'Are you sure you want to delete this item?<br><small>(all associated loans to this book will also be deleted)</small>';
       const confirmed = () => {
         Data.del(item.id, this.category)
           .then(() => {
-            if (this.state.editItemIndex === index) {
+            if (this._state.editItemIndex === index) {
               /** Update state object */
-              this.state.editItemIndex = '';
+              this._state.editItemIndex = '';
             }
             Noty.main('Item was deleted successfully', 'success');
           })
@@ -270,7 +277,7 @@ function Table($filter, Data, Noty) {
         /** Enable actions buttons */
         item.deleting = false;
       }
-      Noty.dialog(message, confirmed, canceled);
+      Noty.dialog(this._deleteMessage, confirmed, canceled);
     }
 
     /**
@@ -279,7 +286,7 @@ function Table($filter, Data, Noty) {
      */
 
     get hasModifiedItem() {
-      return this.displayedData && angular.isNumber(this.state.editItemIndex) && this.displayedData[this.state.editItemIndex].modified;
+      return this.displayedData && angular.isNumber(this._state.editItemIndex) && this.displayedData[this._state.editItemIndex].modified;
     }
   }
   return Service;

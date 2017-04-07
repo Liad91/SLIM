@@ -28,7 +28,13 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
 
   vm.table = new Table('books', update);
 
-  vm.table.setState = vm.state;
+  /** 
+   * Table setters
+   */
+
+  vm.table.state = vm.state;
+
+  vm.table.deleteMessage = 'Are you sure you want to delete this book?<br><small>(all associated loans to this book will also be deleted)</small>';
 
   /**
    * Set table filters
@@ -41,9 +47,9 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   ];
 
   Table.prototype.adjust = function(force) {
-    const page = force ? 0 : this.state.currentPage;
+    const page = force ? 0 : this._state.currentPage;
 
-    switch(this.state.currentFilter) {
+    switch(this._state.currentFilter) {
       case 'All':
         this.filteredData = this.data;
         break;
@@ -55,11 +61,11 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
         break;
     }
 
-    if (this.state.searchQuery) {
-      this.filteredData = $filter('filter')(this.filteredData, { title: this.state.searchQuery });
+    if (this._state.searchQuery) {
+      this.filteredData = $filter('filter')(this.filteredData, { title: this._state.searchQuery });
     }
-    if (this.state.sortBy) {
-      this.filteredData = $filter('orderBy')(this.filteredData, this.state.sortBy, this.state.sortReverse);
+    if (this._state.sortBy) {
+      this.filteredData = $filter('orderBy')(this.filteredData, this._state.sortBy, this._state.sortReverse);
     }
 
     this.setPage(page);
@@ -72,7 +78,7 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
 
     this.data = this.getData();
     
-    this.state.currentFilter = filter;
+    this._state.currentFilter = filter;
 
     switch(filter) {
       case 'All':
@@ -87,13 +93,13 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
     }
 
     /** Reset sort state */
-    if (this.state.sortBy) {
-      this.state.sortBy = '',
-      this.state.sortReverse = false;
+    if (this._state.sortBy) {
+      this._state.sortBy = '',
+      this._state.sortReverse = false;
     }
 
-    if (this.state.searchQuery) {
-      this.search(this.state.searchQuery)
+    if (this._state.searchQuery) {
+      this.search(this._state.searchQuery)
     }
     else {
       this.setPage(0);
@@ -103,19 +109,19 @@ function BooksCtrl($scope, $filter, Data, Broadcast, State, Dates, Noty, Table) 
   Table.prototype.search = function(curQuery, prevQuery) {
     /** Display warning if there's open item and it was modified */
     if (this.hasModifiedItem) {
-      this.state.searchQuery = prevQuery;
+      this._state.searchQuery = prevQuery;
       return Noty.main('Save your changes or cancel them before searching', 'warning');
     }
 
     /** If search input gets shorter get the data list */
     if (prevQuery && prevQuery.length > curQuery.length) {
-      return this.switchFilter(this.state.currentFilter);
+      return this.switchFilter(this._state.currentFilter);
     }
 
     /** Reset sort state */
-    if (this.state.sortBy) {
-      this.state.sortBy = '',
-      this.state.sortReverse = false;
+    if (this._state.sortBy) {
+      this._state.sortBy = '',
+      this._state.sortReverse = false;
     }
 
     /** Search only if there's data */
