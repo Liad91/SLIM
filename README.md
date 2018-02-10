@@ -26,7 +26,7 @@ SLIM is a single page library management system for small libraries. AngularJS p
 ### Installation
 
 ```sh
-$ git clone https://github.com/Liad91/slim.git
+$ git clone https://github.com/LiadIdan/slim.git
 $ cd slim
 $ npm install
 $ bower install

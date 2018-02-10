@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "win_build_production": "set node_env=production&& gulp"
+    "build_dev": "node_modules/.bin/gulp",
+    "build_prod": "node_modules/.bin/gulp --prod",
+    "seed": "node_modules/.bin/sequelize db:seed:all"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -28,17 +30,17 @@
     "gulp-concat": "^2.6.1",
     "gulp-eslint": "^3.0.1",
     "gulp-if": "^2.0.2",
-    "gulp-image": "^2.7.3",
+    "gulp-image-sans-guetzli": "^4.1.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.4.0",
     "gulp-uglify": "^2.0.1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Liad91/SLIM.git"
+    "url": "git+https://github.com/LiadIdan/slim.git"
   },
   "bugs": {
-    "url": "https://github.com/Liad91/SLIM/issues"
+    "url": "https://github.com/LiadIdan/slim/issues"
   },
-  "homepage": "https://github.com/Liad91/SLIM#readme"
+  "homepage": "https://github.com/LiadIdan/slim#readme"
 }

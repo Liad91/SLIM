@@ -1,14 +1,14 @@
 {
   "development": {
-    "storage": "api/data/library.db",
+    "storage": "config/database.sqlite",
     "dialect": "sqlite"
   },
   "test": {
-    "storage": "api/data/test.db",
+    "storage": "config/database.sqlite",
     "dialect": "sqlite"
   },
   "production": {
-    "storage": "api/data/library.db",
+    "storage": "config/database.sqlite",
     "dialect": "sqlite"
   }
 }

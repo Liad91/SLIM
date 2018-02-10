@@ -3,7 +3,7 @@
 /** Gulp and gulp plugins */
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const image = require('gulp-image');
+const image = require('gulp-image-sans-guetzli');
 const uglify = require('gulp-uglify');
 const eslint = require('gulp-eslint');
 const gulpif = require('gulp-if');
@@ -19,7 +19,7 @@ const settings = new class Settings {
     this.bower = 'bower_components/';
     this.dist = 'dist/';
 
-    this.env = process.env.NODE_ENV || 'development';
+    this.env = process.argv.length > 2 && process.argv[2] === '--prod' ? 'production' : 'development';
 
     this.dest = {
       scripts: this.dist + 'js',
@@ -83,7 +83,7 @@ const settings = new class Settings {
 };
 
 /** Concat all the styles into one file */
-gulp.task('dist-css', () => {
+gulp.task('dist-css', () => {  
   const config = {
     includePaths: [settings.styles.bootstrap, settings.styles.fontAwesome]
   };

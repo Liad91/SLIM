@@ -12,8 +12,8 @@ bower_components
 # Distribution directory
 dist
 
-# Database directory
-api
+# Database file
+config/database.sqlite
 
 # Debug log from npm
 npm-debug.log
