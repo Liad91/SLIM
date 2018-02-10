@@ -35,18 +35,13 @@ $ bower install
 ### Build the dist folder
 
 #### For production release:
-linux / os
-```sh
-$ set node_env=production gulp
 ```
-windows
-```
-$ npm run win_build_production
+$ npm run build_prod
 ```
 
 #### For development:
 ```
-$ gulp
+$ npm run build
 ```
 
 ### Run and build the database
@@ -58,7 +53,7 @@ $ npm start
 ### Seed the database
 
 ```
-$ node_modules\.bin\sequelize db:seed:all
+$ npm run seed
 ```
 
 ### Login
