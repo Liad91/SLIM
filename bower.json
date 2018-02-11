@@ -6,7 +6,7 @@
     "Liad Idan <liad.idan@gmail.com>"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/LiadIdan/slim",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,12 +15,12 @@
     "tests"
   ],
   "dependencies": {
-    "angular-animate": "^1.6.2",
-    "angular-route": "^1.6.2",
+    "angular-animate": "^1.6.9",
+    "angular-route": "^1.6.9",
     "font-awesome": "^4.7.0",
     "bootstrap": "v4.0.0-alpha.6",
     "noty": "^2.3.11",
-    "angular-cookies": "^1.6.2",
-    "angular-messages": "^1.6.3"
+    "angular-cookies": "^1.6.9",
+    "angular-messages": "^1.6.9"
   }
 }

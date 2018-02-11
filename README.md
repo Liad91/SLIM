@@ -41,7 +41,7 @@ $ npm run build_prod
 
 #### For development:
 ```
-$ npm run build
+$ npm run build_dev
 ```
 
 ### Run and build the database
